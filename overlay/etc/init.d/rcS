@@ -14,8 +14,8 @@ mkdir -p /dev/pts
 mount -a
 
 # Determine active system partition
-system0_version=$(awk "{print \$3}" /media/system0/version 2> /dev/null)
-system1_version=$(awk "{print \$3}" /media/system1/version 2> /dev/null)
+system0_version=$(awk -F= "{print \$2}" /media/system0/boot/version.txt 2> /dev/null)
+system1_version=$(awk -F= "{print \$2}" /media/system1/boot/version.txt 2> /dev/null)
 
 # Non-numbers get set to -1
 if ! echo $system0_version | egrep -q '^[0-9]+$'; then
