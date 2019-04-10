@@ -1,0 +1,29 @@
+logger "autorun: ACTION=${ACTION} MDEV=${MDEV}"
+
+if [ -z "${MDEV}" ]; then
+	logger "autorun: MDEV was not set. Exiting..."
+	exit 1
+fi
+
+eifdown() {
+	ifdown "$1"
+	logger "autorun: Took down interface $1"
+}
+
+eifup() {
+	ifup "$1"
+	logger "autorun: Brought up interface $1"
+}
+
+case "${ACTION}" in
+	add)
+		eifdown $MDEV
+		eifup $MDEV
+		;;
+	remove)
+		eifdown $MDEV
+		;;
+	*)
+		logger "autorun: Unknown action '${ACTION}'"
+		;;
+esac
