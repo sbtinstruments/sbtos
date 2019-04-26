@@ -104,28 +104,6 @@ echo " config $CONFIG_VERSION ($CONFIG_NAME)" >> /etc/motd
 echo "++ Running all startup scripts"
 # Start all init scripts in /etc/init.d
 # executing them in numerical order.
-#
-# Modules
-for i in /etc/init.d/M??* ;do
-
-	 # Ignore dangling symlinks (if any).
-	 [ ! -f "$i" ] && continue
-
-	 case "$i" in
-		*.sh)
-			# Source shell script for speed.
-			(
-				trap - INT QUIT TSTP
-				set insert
-				. $i
-			)
-			;;
-		*)
-			# No sh extension, so fork subprocess.
-			$i insert
-			;;
-	esac
-done
 
 # Synchronuous scripts in order
 for i in /etc/init.d/S??* ;do
