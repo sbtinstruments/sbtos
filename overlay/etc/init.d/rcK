@@ -4,18 +4,59 @@ if [ -r /etc/default/rcK ]
 then
 	. /etc/default/rcK
 else
-    echo "/etc/default/rcK not found."
+	echo "/etc/default/rcK not found."
 fi
 
-/etc/init.d/Amonit stop
-/etc/init.d/Adash stop
-/etc/init.d/Asensord stop
-/etc/init.d/S81telegraf stop
-/etc/init.d/S80telegraf stop
-/etc/init.d/S51rsyslog stop
+echo "rcK: gracefully stopping daemons..." > /dev/kmsg
 
-# Shutdown CPU 1 and unmount
-echo 0 > /sys/devices/system/cpu/cpu1/online
-sleep 0.3
+# Stop monit first
+/etc/init.d/Amonit stop
+
+# Stop asynchronous scripts
+for i in $(ls -r /etc/init.d/A??*) ;do
+	# Ignore dangling symlinks (if any).
+	[ ! -f "$i" ] && continue
+
+	case "$i" in
+	*.sh)
+		# Source shell script for speed.
+		(
+		trap - INT QUIT TSTP
+		set stop
+		. $i
+		)
+		;;
+	*)
+		# No sh extension, so fork subprocess.
+		$i stop
+		;;
+	esac
+done
+
+# Stop all init scripts in /etc/init.d
+# executing them in reversed numerical order.
+for i in $(ls -r /etc/init.d/S??*) ;do
+	 # Ignore dangling symlinks (if any).
+	 [ ! -f "$i" ] && continue
+
+	case "$i" in
+	*.sh)
+		# Source shell script for speed.
+		(
+		trap - INT QUIT TSTP
+		set stop
+		. $i
+		)
+		;;
+	*)
+		# No sh extension, so fork subprocess.
+		$i stop
+		;;
+	esac
+done
+
+echo "rcK: unmounting all" > /dev/kmsg
+
 /bin/umount -a -r
 
+echo "rcK: all done" > /dev/kmsg
