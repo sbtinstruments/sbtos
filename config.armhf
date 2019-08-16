@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Buildroot 2018.11.1-07051-gdbc9b140b-dirty Configuration
+# Buildroot 2018.11.1-gdfe8fdf-dirty Configuration
 #
 BR2_HAVE_DOT_CONFIG=y
 BR2_HOST_GCC_AT_LEAST_4_5=y
@@ -837,7 +837,7 @@ BR2_PACKAGE_QT5_VERSION_LATEST=y
 # qt53d module needs an OpenGL-capable backend
 #
 BR2_PACKAGE_QT5BASE=y
-BR2_PACKAGE_QT5BASE_CUSTOM_CONF_OPTS=""
+BR2_PACKAGE_QT5BASE_CUSTOM_CONF_OPTS="-kms"
 BR2_PACKAGE_QT5BASE_CONFIG_FILE=""
 # BR2_PACKAGE_QT5BASE_EXAMPLES is not set
 BR2_PACKAGE_QT5BASE_NETWORK=y
@@ -2747,7 +2747,7 @@ BR2_PACKAGE_EFIVAR_ARCH_SUPPORTS=y
 # BR2_PACKAGE_FTOP is not set
 # BR2_PACKAGE_GETENT is not set
 BR2_PACKAGE_HTOP=y
-# BR2_PACKAGE_INITSCRIPTS is not set
+BR2_PACKAGE_INITSCRIPTS=y
 # BR2_PACKAGE_IOTOP is not set
 # BR2_PACKAGE_IPRUTILS is not set
 # BR2_PACKAGE_IRQBALANCE is not set
@@ -3539,9 +3539,9 @@ BR2_LINUX_KERNEL_CUSTOM_GIT_VERSION=""
 #
 
 #
-# SBT_AQUA (in /projects/RedPitaya/OS/buildroot/external)
+# SBT_AQUA (in /projects/sbtos-rootfs/external)
 #
-BR2_EXTERNAL_SBT_AQUA_PATH="/projects/RedPitaya/OS/buildroot/external"
+BR2_EXTERNAL_SBT_AQUA_PATH="/projects/sbtos-rootfs/external"
 BR2_PACKAGE_PYTHON_AIOHTTP=y
 BR2_PACKAGE_PYTHON_AIOJOBS=y
 BR2_PACKAGE_PYTHON_ASYNC_EXIT_STACK=y
