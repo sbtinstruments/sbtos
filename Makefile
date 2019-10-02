@@ -5,7 +5,7 @@
 # Ales Bardorfer <ales.bardorfer@redpitaya.com>
 #
 B_SERVER=http://buildroot.uclibc.org/downloads
-B_VERSION=2018.11.1
+B_VERSION=2019.08
 B_DIR=buildroot-$(B_VERSION)
 B_ARCHIVE=$(B_DIR).tar.gz
 B_DOWNLOAD=$(B_SERVER)/$(B_ARCHIVE)
@@ -30,7 +30,7 @@ $(UIMAGE): $(B_DIR) \
 $(B_DIR):
 	wget $(B_DOWNLOAD)
 	tar xfz $(B_ARCHIVE)
-	ln -s $(B_DIR) buildroot
+	ln -fs $(B_DIR) buildroot
 
 $(B_DIR)/.config: config.armhf
 	cp $< $@
