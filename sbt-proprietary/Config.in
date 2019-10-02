@@ -1,0 +1,1 @@
+# source "$BR2_EXTERNAL_SBT_PROPRIETARY_PATH/package/<package>/Config.in"

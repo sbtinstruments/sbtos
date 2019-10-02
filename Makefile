@@ -1,39 +1,34 @@
 #
 # Copyright 2019 Frederik Peter Aalund <fpa@sbtinstruments.com>
 #
-# Based on the Makefile from the Red Pitaya project by
-# Ales Bardorfer <ales.bardorfer@redpitaya.com>
-#
-B_SERVER=http://buildroot.uclibc.org/downloads
-B_VERSION=2019.08
-B_DIR=buildroot-$(B_VERSION)
-B_ARCHIVE=$(B_DIR).tar.gz
-B_DOWNLOAD=$(B_SERVER)/$(B_ARCHIVE)
-UIMAGE=$(B_DIR)/output/images/rootfs.cpio.uboot
+BUILDROOT_SERVER=http://buildroot.uclibc.org/downloads
+BUILDROOT_VERSION=2019.08
+BUILDROOT_ARCHIVE=buildroot-$(BUILDROOT_VERSION).tar.gz
+BUILDROOT_MAKE=$(MAKE) -C buildroot BR2_EXTERNAL=../sbt-open-source:../sbt-proprietary BR2_JLEVEL=$(PROCESSORS)
+UIMAGE=buildroot/output/images/rootfs.cpio.uboot
 GIT_DESCRIPTION=$(shell git describe --tags --dirty --always --match [0-9][0-9][0-9][0-9]\.[0-9][0-9]\.[0-9]*)
 SBTOS_VERSION=$(GIT_DESCRIPTION:v%=%)
-OSRELEASE=overlay/etc/os-release
-processors=$(shell grep -c ^processor /proc/cpuinfo)
-
+OSRELEASE=sbt-open-source/board/common/rootfs_overlay/etc/os-release
+PROCESSORS=$(shell grep -c ^processor /proc/cpuinfo)
 INSTALL_DIR ?= .
 
 all: $(UIMAGE)
 
-$(UIMAGE): $(B_DIR) \
-           overlay \
-           $(B_DIR)/.config \
-           $(OSRELEASE)
-	rm -f $(B_DIR)/output/target/etc/hostname
-	rm -f $(B_DIR)/output/target/etc/network/interfaces
-	$(MAKE) -C $(B_DIR) BR2_EXTERNAL=../external BR2_JLEVEL=$(processors)
+# Build ramdisk image. Ensure that the release version is always up to date
+# via the $(OSRELEASE) dependency.
+$(UIMAGE): buildroot $(OSRELEASE) symbolic-link-fix
+	# Load config
+	$(BUILDROOT_MAKE) zeus_defconfig
+	# Make image
+	$(BUILDROOT_MAKE)
 
-$(B_DIR):
-	wget $(B_DOWNLOAD)
-	tar xfz $(B_ARCHIVE)
-	ln -fs $(B_DIR) buildroot
+buildroot: $(BUILDROOT_ARCHIVE)
+	# E.g., extract "buildroot-2019.8.tar.gz" into "buildroot"
+	mkdir -p $@
+	tar xfz $< -C $@ --strip-components=1
 
-$(B_DIR)/.config: config.armhf
-	cp $< $@
+$(BUILDROOT_ARCHIVE):
+	wget $(BUILDROOT_SERVER)/$(BUILDROOT_ARCHIVE)
 
 install: $(UIMAGE)
 	mkdir -p $(INSTALL_DIR)
@@ -44,24 +39,30 @@ install-remote: remote_host_defined install
 	scp uramdisk.image.gz $(remote_host):/boot
 	ssh $(remote_host) "/bin/mount -o ro,remount \$$(readlink /media/system)"
 
+.PHONY: symbolic-link-fix
+symbolic-link-fix:
+	# Manually remove some symbolic links from the rootfs overlay in
+	# order to make buildroot happy before building.
+	rm -f buildroot/output/target/etc/hostname
+	rm -f buildroot/output/target/etc/network/interfaces
+
+.PHONY: clean
 clean:
-	-$(MAKE) -C $(B_DIR) clean
-	rm *~ -f
+	$(MAKE) -C buildroot clean
 
-mrproper:
-	-rm -rf $(B_DIR) $(B_ARCHIVE)
-	-rm *~ -f
+.PHONY: mrproper
+mrproper: clean
+	rm -rf buildroot $(BUILDROOT_ARCHIVE)
 
+.PHONY: $(OSRELEASE)
 $(OSRELEASE):
-	( \
+	@( \
 		echo "NAME=sbtOS"; \
 		echo "VERSION=$(SBTOS_VERSION)"; \
 		echo "ID=sbtos"; \
 		echo "VERSION_ID=$(SBTOS_VERSION)"; \
 		echo "PRETTY_NAME=\"sbtOS $(SBTOS_VERSION)\"" \
 	) > $@
-
-.PHONY: clean mrproper $(OSRELEASE)
 
 .PHONY: remote_host_defined
 remote_host_defined:
