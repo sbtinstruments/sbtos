@@ -1,0 +1,5 @@
+config BR2_PACKAGE_PYTHON_DASH
+	bool "python-dash"
+	help
+	  Dashboard interface
+
