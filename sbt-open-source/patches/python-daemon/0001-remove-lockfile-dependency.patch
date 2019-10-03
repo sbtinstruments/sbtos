@@ -1,0 +1,14 @@
+setup.py: remove lockfile dependency
+
+Signed-off-by: Frederik Aalund <fpa@sbtinstruments.com>
+
+--- a/setup.py	2019-01-21 00:59:50.000000000 +0100
++++ b/setup.py	2019-10-03 11:12:31.817937511 +0200
+@@ -69,7 +69,6 @@
+             ],
+         install_requires=[
+             "setuptools",
+-            "lockfile >=0.10",
+             ],
+ 
+         # PyPI metadata.
