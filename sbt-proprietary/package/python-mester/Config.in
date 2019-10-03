@@ -1,0 +1,5 @@
+config BR2_PACKAGE_PYTHON_MESTER
+	bool "python-mester"
+	help
+	  Run custom and pre-defined programs
+
