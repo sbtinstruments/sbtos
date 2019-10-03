@@ -1,0 +1,5 @@
+config BR2_PACKAGE_PYTHON_CELLMATE
+	bool "python-cellmate"
+	help
+	  FlowCell control
+
