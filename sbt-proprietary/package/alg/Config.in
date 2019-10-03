@@ -1,0 +1,5 @@
+config BR2_PACKAGE_ALG
+	bool "alg"
+	help
+	  Bacteria detection algorithms
+
