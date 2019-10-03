@@ -9,7 +9,7 @@ fi
 case "$1" in
 		start)
 				echo -n "Starting maskin... "
-				/bin/maskin
+				/usr/bin/maskin
 				echo "done."
 				;;
 		stop)

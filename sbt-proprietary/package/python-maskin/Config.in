@@ -1,0 +1,5 @@
+config BR2_PACKAGE_PYTHON_MASKIN
+	bool "python-maskin"
+	help
+	  Peripheral management
+
