@@ -1,3 +1,5 @@
+source "$BR2_EXTERNAL_SBT_PROPRIETARY_PATH/package/alg/Config.in"
+source "$BR2_EXTERNAL_SBT_PROPRIETARY_PATH/package/python-algpy/Config.in"
 source "$BR2_EXTERNAL_SBT_PROPRIETARY_PATH/package/python-cellmate/Config.in"
 source "$BR2_EXTERNAL_SBT_PROPRIETARY_PATH/package/python-dash/Config.in"
 source "$BR2_EXTERNAL_SBT_PROPRIETARY_PATH/package/python-geist/Config.in"
