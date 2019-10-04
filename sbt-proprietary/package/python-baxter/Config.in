@@ -1,0 +1,5 @@
+config BR2_PACKAGE_PYTHON_BAXTER
+	bool "python-baxter"
+	help
+	  Measurement gateway
+

@@ -9,7 +9,7 @@ fi
 case "$1" in
 		start)
 				echo -n "Starting baxter... "
-				/bin/baxter
+				/usr/bin/baxter
 				echo "done."
 				;;
 		stop)
