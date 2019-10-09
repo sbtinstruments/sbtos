@@ -39,6 +39,11 @@ install-remote: remote_host_defined install
 	scp uramdisk.image.gz $(remote_host):/boot
 	ssh $(remote_host) "/bin/mount -o ro,remount \$$(readlink /media/system)"
 
+kernel-install-remote: remote_host_defined install
+	ssh $(remote_host) "/bin/mount -o rw,remount \$$(readlink /media/system)"
+	scp buildroot/output/images/uImage $(remote_host):/boot
+	ssh $(remote_host) "/bin/mount -o ro,remount \$$(readlink /media/system)"
+
 .PHONY: symbolic-link-fix
 symbolic-link-fix:
 	# Manually remove some symbolic links from the rootfs overlay in
