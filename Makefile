@@ -15,7 +15,7 @@ all: $(UIMAGE)
 
 # Build ramdisk image. Ensure that the release version is always up to date
 # via the $(OSRELEASE) dependency.
-$(UIMAGE): buildroot $(OSRELEASE) symbolic-link-fix
+$(UIMAGE): buildroot $(OSRELEASE)
 	# Load config
 	$(BUILDROOT_MAKE) zeus_defconfig
 	# Make image
@@ -38,13 +38,6 @@ kernel-install-remote: remote_host_defined install
 	ssh $(remote_host) "/bin/mount -o rw,remount \$$(readlink /media/system)"
 	scp buildroot/output/images/uImage $(remote_host):/boot
 	ssh $(remote_host) "/bin/mount -o ro,remount \$$(readlink /media/system)"
-
-.PHONY: symbolic-link-fix
-symbolic-link-fix:
-	# Manually remove some symbolic links from the rootfs overlay in
-	# order to make buildroot happy before building.
-	rm -f buildroot/output/target/etc/hostname
-	rm -f buildroot/output/target/etc/network/interfaces
 
 .PHONY: clean
 clean:
