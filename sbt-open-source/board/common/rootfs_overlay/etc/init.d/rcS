@@ -50,7 +50,12 @@ echo "rcS: [INFO] inactive_system=$inactive_system"
 ################################################################################
 # Overrides for the root filesystem
 ################################################################################
-# The override hierarchy is as follows (uppermost mentioned first):
+# Many of the following mounts will override existing rootfs entries.
+# We make sure that we can access the rootfs version later.
+mkdir -p /media/rootfs
+mount --bind / /media/rootfs
+
+### The /etc override hierarchy is as follows (uppermost mentioned first):
 #
 #   1. /media/config/override/etc (from the 'config' partition)
 #          Nothing per default. Can be used during testing.
@@ -61,12 +66,9 @@ echo "rcS: [INFO] inactive_system=$inactive_system"
 #   3. /etc (from the rootfs)
 #          Everything from buildroot
 #
-mkdir -p /media/etc_from_rootfs
 mkdir -p /media/config/individual/etc
 mkdir -p /media/config/override/etc
 mkdir -p /media/config/workdir/etc
-# Make sure that we can access the rootfs version later
-mount --bind /etc /media/etc_from_rootfs
 # Note that the lowest lowerdir (/etc) is the same as the merged dir (/etc).
 # Effectively, this overrides the /etc entry with the merged version
 lowerdir=/media/config/individual/etc:/etc
@@ -75,6 +77,20 @@ workdir=/media/config/workdir/etc
 mergeddir=/etc
 options=lowerdir=$lowerdir,upperdir=$upperdir,workdir=$workdir
 mount -t overlay overlay -o $options $mergeddir
+
+### Similar for /root
+mkdir -p /media/config/individual/root
+mkdir -p /media/config/override/root
+mkdir -p /media/config/workdir/root
+# Note that the lowest lowerdir (/root) is the same as the merged dir (/root).
+# Effectively, this overrides the /root entry with the merged version
+lowerdir=/media/config/individual/root:/root
+upperdir=/media/config/override/root
+workdir=/media/config/workdir/root
+mergeddir=/root
+options=lowerdir=$lowerdir,upperdir=$upperdir,workdir=$workdir
+mount -t overlay overlay -o $options $mergeddir
+
 
 ################################################################################
 # Hostname
