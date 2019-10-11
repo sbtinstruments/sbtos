@@ -1,0 +1,17 @@
+################################################################################
+#
+# zeus-config
+#
+################################################################################
+
+ZEUS_CONFIG_VERSION = v0.1.0
+ZEUS_CONFIG_SITE = git@github.com:sbtinstruments/zeus-config.git
+ZEUS_CONFIG_SITE_METHOD = git
+ZEUS_CONFIG_LICENSE = PROPRIETARY
+ZEUS_CONFIG_REDISTRIBUTE = NO
+
+define ZEUS_CONFIG_INSTALL_TARGET_CMDS
+	cp -R --no-dereference --preserve=mode,links -v $(@D)/etc/* $(TARGET_DIR)/etc/
+endef
+
+$(eval $(generic-package))

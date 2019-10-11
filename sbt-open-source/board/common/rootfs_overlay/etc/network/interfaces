@@ -1,1 +1,9 @@
-/media/config/etc/network/interfaces
+# Loopback interface
+auto lo
+iface lo inet loopback
+
+# Dynamic (DHCP) IP address
+auto eth0
+iface eth0 inet dhcp
+	udhcpc_opts -t7 -T3
+	hostname $(hostname)

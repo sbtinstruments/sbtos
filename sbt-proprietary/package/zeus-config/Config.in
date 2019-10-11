@@ -1,0 +1,5 @@
+config BR2_PACKAGE_ZEUS_CONFIG
+	bool "zeus-config"
+	help
+	  Zeus configuration files for /etc
+

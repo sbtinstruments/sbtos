@@ -1,19 +1,27 @@
 #!/bin/sh
 
-echo "Starting rcS..."
+################################################################################
+# Settings from /etc/default
+################################################################################
+echo "rcS: [INFO] Starting"
 
 if [ -r /etc/default/rcS ]
 then
 	. /etc/default/rcS
 else
-	echo "/etc/default/rcS not found."
+	echo "rcS: [INFO] /etc/default/rcS was not found and won't be used."
 fi
 
-echo "++ Mounting filesystems"
+################################################################################
+# Mount all filesystems
+################################################################################
+echo "rcS: [INFO] Mounting filesystems"
 mkdir -p /dev/pts
 mount -a
 
+################################################################################
 # Determine active system partition
+################################################################################
 system0_version=$(awk -F= "{print \$2}" /media/system0/boot/version.txt 2> /dev/null)
 system1_version=$(awk -F= "{print \$2}" /media/system1/boot/version.txt 2> /dev/null)
 
@@ -33,79 +41,66 @@ else
 	inactive_system=/media/system0
 fi
 
-# Set active/inactive system
-echo "active_system=$active_system"
-echo "inactive_system=$inactive_system"
 # Set system partitions
 ln -s $active_system /media/system
 ln -s $inactive_system /media/inactive_system
+echo "rcS: [INFO] active_system=$active_system"
+echo "rcS: [INFO] inactive_system=$inactive_system"
 
-# Set hostname
+################################################################################
+# Overrides for the root filesystem
+################################################################################
+# The override hierarchy is as follows (uppermost mentioned first):
+#
+#   1. /media/config/override/etc (from the 'config' partition)
+#          Nothing per default. Can be used during testing.
+#
+#   2. /media/config/individual/etc (from the 'config' partition)
+#          Hostname, timezone, etc.
+#
+#   3. /etc (from the rootfs)
+#          Everything from buildroot
+#
+mkdir -p /media/etc_from_rootfs
+mkdir -p /media/config/individual/etc
+mkdir -p /media/config/override/etc
+mkdir -p /media/config/workdir/etc
+# Make sure that we can access the rootfs version later
+mount --bind /etc /media/etc_from_rootfs
+# Note that the lowest lowerdir (/etc) is the same as the merged dir (/etc).
+# Effectively, this overrides the /etc entry with the merged version
+lowerdir=/media/config/individual/etc:/etc
+upperdir=/media/config/override/etc
+workdir=/media/config/workdir/etc
+mergeddir=/etc
+options=lowerdir=$lowerdir,upperdir=$upperdir,workdir=$workdir
+mount -t overlay overlay -o $options $mergeddir
+
+################################################################################
+# Hostname
+################################################################################
 hostname -F /etc/hostname
 
-# Link modules from /media/system/lib/modules/... to /lib/modules/...
-MODPATH=lib/modules/$(uname -r)
-mkdir -p /$MODPATH
-for i in /media/system/$MODPATH/* ;do
-	# Ignore dangling symlinks (if any).
-	[ ! -f "$i" ] && continue
-	ln -s $i /$MODPATH/$(basename $i)
-done
-
-# Create modules.* files in /lib/modules/...
-depmod
-
+################################################################################
+# Time
+################################################################################
 # Set system time from RTC (assume its using UTC)
 hwclock -us
 
-# Check if SD card mounted, if not wait and try again
-if ! grep -qs /media/data /proc/mounts; then
-	sleep 1
-	mount -a
-fi
-if ! grep -qs /media/system /proc/mounts; then
-	sleep 1
-	mount -a
-fi
-
-# Add data directories
+################################################################################
+# Data directories
+################################################################################
 mkdir -p /media/data/chrony
 mkdir -p /media/data/log
 mkdir -p /media/data/logrotate
 mkdir -p /media/data/srv
 
-# Add SSH keys
-cat /media/config/authorized_keys >> /root/.ssh/authorized_keys
+################################################################################
+# Startup scripts
+################################################################################
+echo "rcS: [INFO] Running all startup scripts"
 
-# Fix keys for SHH
-# Note that the keys are copied (and not symlinked from the overlay) since
-# the SD card (mounted on /media/config) is formatted using FAT32 which doesn't
-# allow for individual file permissions.
-cp /media/config/etc/ssh/* /etc/ssh
-chmod 600 `find /etc/ssh/ -name ssh_host_\*`
-
-# Fix permissions for monitrc
-chmod 700 /etc/monitrc
-
-# Override the /etc/hosts file with the actual hostname (found on the SD card).
-printf "127.0.0.1\tlocalhost\n127.0.1.1\t%s\n" $(cat /etc/hostname) > /etc/hosts
-
-# Override /etc/localtime based on the /etc/timezone file (found on the SD card).
-ln -sf /usr/share/zoneinfo/$(cat /media/config/etc/timezone) /etc/localtime
-
-# Set MotD
-cat /media/config/etc/motd > /etc/motd
-SYSTEM_VERSION=$(awk 'BEGIN{FS=" ";}{print $2;}' /etc/sw-versions)
-echo " system $SYSTEM_VERSION" >> /etc/motd
-CONFIG_VERSION=$(awk 'BEGIN{FS=" ";}{print $2;}' /etc/config-version)
-CONFIG_NAME=$(awk 'BEGIN{FS=" ";}{print $1;}' /etc/config-version)
-echo " config $CONFIG_VERSION ($CONFIG_NAME)" >> /etc/motd
-
-echo "++ Running all startup scripts"
-# Start all init scripts in /etc/init.d
-# executing them in numerical order.
-
-# Synchronuous scripts in order
+# Start all init scripts in /etc/init.d executing them in numerical order.
 for i in /etc/init.d/S??* ;do
 
 	 # Ignore dangling symlinks (if any).
@@ -128,7 +123,6 @@ for i in /etc/init.d/S??* ;do
 done
 
 # Asynchronous scripts without order
-#
 for i in /etc/init.d/A* ;do
 
 	# Ignore dangling symlinks (if any).
