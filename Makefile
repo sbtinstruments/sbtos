@@ -10,7 +10,6 @@ GIT_DESCRIPTION=$(shell git describe --tags --dirty --always --match [0-9][0-9][
 SBTOS_VERSION=$(GIT_DESCRIPTION:v%=%)
 OSRELEASE=sbt-open-source/board/common/rootfs_overlay/etc/os-release
 PROCESSORS=$(shell grep -c ^processor /proc/cpuinfo)
-INSTALL_DIR ?= .
 
 all: $(UIMAGE)
 
@@ -30,13 +29,9 @@ buildroot: $(BUILDROOT_ARCHIVE)
 $(BUILDROOT_ARCHIVE):
 	wget $(BUILDROOT_SERVER)/$(BUILDROOT_ARCHIVE)
 
-install: $(UIMAGE)
-	mkdir -p $(INSTALL_DIR)
-	cp $(UIMAGE) $(INSTALL_DIR)/uramdisk.image.gz
-
-install-remote: remote_host_defined install
+install-remote: remote_host_defined $(UIMAGE)
 	ssh $(remote_host) "/bin/mount -o rw,remount \$$(readlink /media/system)"
-	scp uramdisk.image.gz $(remote_host):/boot
+	scp $(UIMAGE) $(remote_host):/boot/uramdisk.image.gz
 	ssh $(remote_host) "/bin/mount -o ro,remount \$$(readlink /media/system)"
 
 kernel-install-remote: remote_host_defined install
