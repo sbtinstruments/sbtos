@@ -115,7 +115,7 @@ sw-description: sw-description.in
 .PHONY: clean
 clean:
 	$(MAKE) -C buildroot clean
-	rm -rf system system.img .os-release
+	rm -rf system system.img .os-release sw-description *.swu
 
 .PHONY: mrproper
 mrproper: clean
