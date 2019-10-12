@@ -1,0 +1,49 @@
+################################################################################
+#
+# influxdb
+#
+################################################################################
+
+INFLUXDB_VERSION = 1.7.8
+INFLUXDB_SOURCE = influxdb-$(INFLUXDB_VERSION)_linux_armhf.tar.gz
+INFLUXDB_SITE =  https://dl.influxdata.com/influxdb/releases
+INFLUXDB_LICENSE = MIT
+INFLUXDB_LICENSE_FILES = LICENSE
+INFLUXDB_DEPENDENCIES = host-upx
+
+INFLUXDB_BUILD_BIN_DIR = $(@D)/influxdb-$(INFLUXDB_VERSION)-1/usr/bin
+INFLUXDB_BIN_INFLUXD = ${INFLUXDB_BUILD_BIN_DIR}/influxd
+INFLUXDB_BIN_INFLUX = ${INFLUXDB_BUILD_BIN_DIR}/influx
+
+define INFLUXDB_BUILD_CMDS
+	@echo "INFO: Not building. We use a pre-built binary for linux-armhf."
+endef
+
+ifeq ($(BR2_PACKAGE_INFLUXDB_COMPRESS_BINARIES),y)
+HOST_STRIP = $(TARGET_CROSS)strip
+HOST_UPX = $(HOST_DIR)/bin/upx
+INFLUXDB_BIN_INFLUX_COMPR = ${INFLUXDB_BUILD_BIN_DIR}/influx_compr
+INFLUXDB_BIN_INFLUXD_COMPR = ${INFLUXDB_BUILD_BIN_DIR}/influxd_compr
+define INFLUXDB_BUILD_CMD_COMPRESS
+	@echo "INFO: Packaging the otherwise HUGE binary using UPX."
+	rm -f ${INFLUXDB_BIN_INFLUXD_COMPR} ${INFLUXDB_BIN_INFLUX_COMPR}
+	${HOST_STRIP} -o ${INFLUXDB_BIN_INFLUXD_COMPR} $(INFLUXDB_BIN_INFLUXD)
+	${HOST_STRIP} -o ${INFLUXDB_BIN_INFLUX_COMPR} $(INFLUXDB_BIN_INFLUX)
+	$(HOST_UPX) ${INFLUXDB_BIN_INFLUXD_COMPR}
+	$(HOST_UPX) ${INFLUXDB_BIN_INFLUX_COMPR}
+endef
+INFLUXDB_BUILD_CMDS += ${INFLUXDB_BUILD_CMD_COMPRESS}
+INFLUXDB_INSTALL_INFLUXD = ${INFLUXDB_BIN_INFLUXD_COMPR}
+INFLUXDB_INSTALL_INFLUX = ${INFLUXDB_BIN_INFLUX_COMPR}
+else
+INFLUXDB_INSTALL_INFLUXD = ${INFLUXDB_BIN_INFLUXD}
+INFLUXDB_INSTALL_INFLUX = ${INFLUXDB_BIN_INFLUX}
+endif
+
+define INFLUXDB_INSTALL_TARGET_CMDS
+	$(INSTALL) -m 755 -D $(INFLUXDB_INSTALL_INFLUXD) $(TARGET_DIR)/usr/bin/influxd
+	$(INSTALL) -m 755 -D $(INFLUXDB_INSTALL_INFLUX) $(TARGET_DIR)/usr/bin/influx
+endef
+
+$(eval $(generic-package))
+

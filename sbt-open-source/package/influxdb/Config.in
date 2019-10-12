@@ -1,0 +1,10 @@
+config BR2_PACKAGE_INFLUXDB
+	bool "influxdb"
+	help
+	  Scalable datastore for metrics, events, and real-time analytics
+
+	  https://influxdata.com
+
+config BR2_PACKAGE_INFLUXDB_COMPRESS_BINARIES
+	bool "attempt to shrink the resulting binaries"
+
