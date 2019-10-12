@@ -5,23 +5,58 @@ BUILDROOT_SERVER=http://buildroot.uclibc.org/downloads
 BUILDROOT_VERSION=2019.08
 BUILDROOT_ARCHIVE=buildroot-$(BUILDROOT_VERSION).tar.gz
 BUILDROOT_MAKE=$(MAKE) -C buildroot BR2_EXTERNAL=../sbt-open-source:../sbt-proprietary BR2_JLEVEL=$(PROCESSORS)
-UIMAGE=buildroot/output/images/rootfs.cpio.uboot
-GIT_DESCRIPTION=$(shell git describe --tags --dirty --always --match [0-9][0-9][0-9][0-9]\.[0-9][0-9]\.[0-9]*)
-SBTOS_VERSION=$(GIT_DESCRIPTION:v%=%)
+ROOTFS=buildroot/output/images/rootfs.cpio.uboot
+KERNEL=buildroot/output/images/uImage
 OSRELEASE=sbt-open-source/board/common/rootfs_overlay/etc/os-release
 PROCESSORS=$(shell grep -c ^processor /proc/cpuinfo)
+# A hack to ensure that the version file is always up-to-date.
+ALWAYS_EXECUTE_THIS_SCRIPT:=$(shell ./update-os-release.sh $(OSRELEASE))
 
-all: $(UIMAGE)
 
-# Build ramdisk image. Ensure that the release version is always up to date
-# via the $(OSRELEASE) dependency.
-$(UIMAGE): buildroot $(OSRELEASE)
-	# Load config
-	$(BUILDROOT_MAKE) zeus_defconfig
-	# Make image
+
+all: system.img
+
+
+
+###############################################################################
+### System image
+###############################################################################
+SYSTEM_FILES=system/boot/uramdisk.image.gz \
+             system/boot/uImage
+
+system.img: $(SYSTEM_FILES)
+	@rm -f $@
+	mke2fs \
+		-L "system" \
+		-N 0 \
+		-O 64bit \
+		-d "system" \
+		-m 5 \
+		-r 1 \
+		-t ext4 \
+		"$@" \
+		150M \
+
+$(SYSTEM_FILES): $(ROOTFS) $(KERNEL)
+	@mkdir -p system/boot
+	cp $(ROOTFS) system/boot/uramdisk.image.gz
+	cp $(KERNEL) system/boot/uImage
+
+
+
+###############################################################################
+### Buildroot
+###############################################################################
+$(ROOTFS): buildroot/.config $(OSRELEASE)
 	$(BUILDROOT_MAKE)
 
-buildroot: $(BUILDROOT_ARCHIVE)
+$(KERNEL): buildroot/.config
+	$(BUILDROOT_MAKE) linux-reinstall
+
+buildroot/.config: sbt-proprietary/configs/zeus_defconfig buildroot/Makefile
+	$(BUILDROOT_MAKE) zeus_defconfig
+
+buildroot/Makefile: $(BUILDROOT_ARCHIVE)
 	# E.g., extract "buildroot-2019.8.tar.gz" into "buildroot"
 	mkdir -p $@
 	tar xfz $< -C $@ --strip-components=1
@@ -29,36 +64,37 @@ buildroot: $(BUILDROOT_ARCHIVE)
 $(BUILDROOT_ARCHIVE):
 	wget $(BUILDROOT_SERVER)/$(BUILDROOT_ARCHIVE)
 
-install-remote: remote_host_defined $(UIMAGE)
+
+
+###############################################################################
+### Install remote
+###############################################################################
+install-remote: remote_host_defined $(ROOTFS)
 	ssh $(remote_host) "/bin/mount -o rw,remount \$$(readlink /media/system)"
-	scp $(UIMAGE) $(remote_host):/boot/uramdisk.image.gz
+	scp $(ROOTFS) $(remote_host):/boot/uramdisk.image.gz
 	ssh $(remote_host) "/bin/mount -o ro,remount \$$(readlink /media/system)"
 
-kernel-install-remote: remote_host_defined install
+kernel-install-remote: remote_host_defined install $(KERNEL)
 	ssh $(remote_host) "/bin/mount -o rw,remount \$$(readlink /media/system)"
-	scp buildroot/output/images/uImage $(remote_host):/boot
+	scp $(KERNEL) $(remote_host):/boot/uImage
 	ssh $(remote_host) "/bin/mount -o ro,remount \$$(readlink /media/system)"
-
-.PHONY: clean
-clean:
-	$(MAKE) -C buildroot clean
-
-.PHONY: mrproper
-mrproper: clean
-	rm -rf buildroot $(BUILDROOT_ARCHIVE)
-
-.PHONY: $(OSRELEASE)
-$(OSRELEASE):
-	@( \
-		echo "NAME=sbtOS"; \
-		echo "VERSION=$(SBTOS_VERSION)"; \
-		echo "ID=sbtos"; \
-		echo "VERSION_ID=$(SBTOS_VERSION)"; \
-		echo "PRETTY_NAME=\"sbtOS $(SBTOS_VERSION)\"" \
-	) > $@
 
 .PHONY: remote_host_defined
 remote_host_defined:
 ifndef remote_host
 	$(error remote_host is not set)
 endif
+
+
+
+###############################################################################
+### Housekeeping
+###############################################################################
+.PHONY: clean
+clean:
+	$(MAKE) -C buildroot clean
+	rm -rf system system.img .os-release
+
+.PHONY: mrproper
+mrproper: clean
+	rm -rf buildroot $(BUILDROOT_ARCHIVE)

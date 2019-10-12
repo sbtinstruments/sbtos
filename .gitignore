@@ -1,3 +1,5 @@
 /buildroot*
 /sbt-open-source/board/common/rootfs_overlay/etc/os-release
+/system
+/system.img
 
