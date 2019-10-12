@@ -1,0 +1,10 @@
+config BR2_PACKAGE_TELEGRAF
+	bool "telegraf"
+	help
+	  The plugin-driven server agent for collecting & reporting metrics.
+
+	  https://influxdata.com
+
+config BR2_PACKAGE_TELEGRAF_COMPRESS_BINARIES
+	bool "attempt to shrink the resulting binaries"
+
