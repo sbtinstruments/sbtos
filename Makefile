@@ -88,6 +88,28 @@ endif
 
 
 ###############################################################################
+### SWUpdate
+###############################################################################
+zeus.swu: sw-description \
+          system.img \
+          umount.sh
+	@rm -rf /tmp/zeus-swu-staging
+	@mkdir -p /tmp/zeus-swu-staging
+	cp $^ /tmp/zeus-swu-staging
+	cd /tmp/zeus-swu-staging && \
+		echo sw-description $$(ls | grep -v sw-description) \
+		| tr " " "\n" \
+		| cpio -ov -H crc -O $(shell pwd)/$@
+
+# Phony, so that the version is always up to date
+.PHONY: sw-description
+sw-description: sw-description.in
+	@mkdir -p $(@D)
+	sed 's/{VERSION}/vtest/g' sw-description.in > $@
+
+
+
+###############################################################################
 ### Housekeeping
 ###############################################################################
 .PHONY: clean
