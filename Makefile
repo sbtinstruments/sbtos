@@ -93,13 +93,12 @@ endif
 zeus.swu: sw-description \
           system.img \
           umount.sh
-	@rm -rf /tmp/zeus-swu-staging
-	@mkdir -p /tmp/zeus-swu-staging
-	cp $^ /tmp/zeus-swu-staging
-	cd /tmp/zeus-swu-staging && \
-		echo sw-description $$(ls | grep -v sw-description) \
-		| tr " " "\n" \
-		| cpio -ov -H crc -O $(shell pwd)/$@
+	# Add the dependencies (in the listed order) to the CPIO
+	# archive. Note that the sw-description file must come first
+	# for SWUpdate to work.
+	for f in $^; do \
+		echo $$f \
+	done | cpio -ov -H crc -O $@
 
 # Phony, so that the version is always up to date
 .PHONY: sw-description
