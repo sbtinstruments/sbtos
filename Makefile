@@ -9,8 +9,9 @@ ROOTFS=buildroot/output/images/rootfs.cpio.uboot
 KERNEL=buildroot/output/images/uImage
 OSRELEASE=sbt-open-source/board/common/rootfs_overlay/etc/os-release
 PROCESSORS=$(shell grep -c ^processor /proc/cpuinfo)
-# A hack to ensure that the version file is always up-to-date.
-ALWAYS_EXECUTE_THIS_SCRIPT:=$(shell ./update-os-release.sh $(OSRELEASE))
+# A hack to ensure that the version is always up-to-date.
+$(shell ./set-version.sh os-release.in $(OSRELEASE))
+$(shell ./set-version.sh sw-description.in sw-description)
 
 
 
@@ -97,14 +98,8 @@ zeus.swu: sw-description \
 	# archive. Note that the sw-description file must come first
 	# for SWUpdate to work.
 	for f in $^; do \
-		echo $$f \
+		echo $$f; \
 	done | cpio -ov -H crc -O $@
-
-# Phony, so that the version is always up to date
-.PHONY: sw-description
-sw-description: sw-description.in
-	@mkdir -p $(@D)
-	sed 's/{VERSION}/vtest/g' sw-description.in > $@
 
 
 
