@@ -59,8 +59,8 @@ buildroot/.config: sbt-proprietary/configs/zeus_defconfig buildroot/Makefile
 
 buildroot/Makefile: $(BUILDROOT_ARCHIVE)
 	# E.g., extract "buildroot-2019.8.tar.gz" into "buildroot"
-	mkdir -p $@
-	tar xfz $< -C $@ --strip-components=1
+	@mkdir -p buildroot
+	tar xfz $< -C buildroot --strip-components=1
 
 $(BUILDROOT_ARCHIVE):
 	wget $(BUILDROOT_SERVER)/$(BUILDROOT_ARCHIVE)
@@ -108,7 +108,7 @@ zeus.swu: sw-description \
 ###############################################################################
 .PHONY: clean
 clean:
-	$(MAKE) -C buildroot clean
+	-$(MAKE) -C buildroot clean
 	rm -rf system system.img .os-release sw-description *.swu
 
 .PHONY: mrproper
