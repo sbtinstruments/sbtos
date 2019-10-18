@@ -32,7 +32,7 @@ GROUP=root
 
 # Daemon name, where is the actual executable If the daemon is not
 # there, then exit.
-DAEMON=/bin/influxd
+DAEMON=/usr/bin/influxd
 if [ ! -x $DAEMON ]; then
     echo "Executable $DAEMON does not exist!"
     exit 5
