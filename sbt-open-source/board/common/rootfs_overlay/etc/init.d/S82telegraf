@@ -112,7 +112,7 @@ function synchronize() {
 name=telegraf
 
 # Daemon name, where is the actual executable
-daemon=/bin/telegraf
+daemon=/usr/bin/telegraf
 
 # pid file for the daemon
 pidfile=/var/run/telegraf/telegraf.pid
@@ -167,7 +167,7 @@ case $1 in
 	# Reference: https://github.com/influxdata/telegraf/issues/2696
 	# Sleep first to ensure that the service is up and running. Execute
 	# asynchronously due to the long sleep
-	nohup sh -c "sleep 10; /bin/influx -execute 'alter retention policy autogen on telegraf duration 60d'" > /dev/null &
+	nohup sh -c "sleep 10; /usr/bin/influx -execute 'alter retention policy autogen on telegraf duration 60d'" > /dev/null &
         ;;
 
     stop)
