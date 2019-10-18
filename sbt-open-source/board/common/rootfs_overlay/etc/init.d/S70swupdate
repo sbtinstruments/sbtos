@@ -1,0 +1,29 @@
+#!/bin/sh
+#
+# Start swupdate
+#
+PIDFILE="/var/run/swupdate.pid"
+
+case "$1" in
+	start)
+		echo "Starting swupdate..."
+		mkdir -p /srv/swupdate
+		TMPDIR=/srv/swupdate start-stop-daemon -S -b -m -p $PIDFILE \
+			-x /usr/bin/swupdate -- --verbose --syslog \
+			--webserver "--document-root /var/www/swupdate/ --port 5011"
+		[ $? -eq 0 ] && echo "OK" || echo "ERROR"
+		;;
+	stop)
+		echo "Stopping swupdate..."
+		start-stop-daemon -K -p $PIDFILE
+		[ $? -eq 0 ] && echo "OK" || echo "ERROR"
+		;;
+	restart|reload)
+		;;
+	*)
+		echo "Usage: $0 {start|stop|restart}"
+		exit 1
+esac
+
+exit $?
+

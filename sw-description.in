@@ -1,52 +1,22 @@
 software =
 {
 	version = "{VERSION}";
-	hardware-compatibility: ["1.0"];
-	stable = {
-		system0: {
-			scripts: (
-				{
-					filename = "umount.sh";
-					data = "/media/system0";
-					type = "preinstall";
-				}
-			);
-			images: (
-				{
-					name = "system";
-					filename = "system.img";
-					device = "/dev/mmcblk0p1";
-				}
-			);
-			bootenv: (
-				{
-					name = "active_system_partition";
-					value = "system0";
-				}
-			);
-		}
-		system1: {
-			scripts: (
-				{
-					filename = "umount.sh";
-					data = "/media/system1";
-					type = "preinstall";
-				}
-			);
-			images: (
-				{
-					name = "system";
-					filename = "system.img";
-					device = "/dev/mmcblk0p2";
-				}
-			);
-			bootenv: (
-				{
-					name = "active_system_partition";
-					value = "system1";
-				}
-			);
-		}
-	};
+	description = "Software update for SBT Instrument devices";
+	zeus = {
+		hardware-compatibility: ["1.0.0"];
+		scripts: (
+			{
+				filename = "swupdate.sh";
+				type = "shellscript";
+			}
+		);
+		images: (
+			{
+				name = "system";
+				filename = "system.img";
+				device = "/dev/mmcblk0update";
+			}
+		);
+	}
 }
 

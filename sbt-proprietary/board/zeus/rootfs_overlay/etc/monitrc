@@ -22,6 +22,11 @@ check process chronyd
         start program = "/etc/init.d/S49chrony start"
         stop  program = "/etc/init.d/S49chrony stop"
 
+check process swupdate
+        with pidfile /var/run/swupdate.pid
+        start program "/etc/init.d/S70swupdate start"
+        stop program "/etc/init.d/S70swupdate stop"
+
 check process influxd
         with pidfile /var/run/influxdb/influxd.pid
         start program = "/etc/init.d/S81influxdb start"

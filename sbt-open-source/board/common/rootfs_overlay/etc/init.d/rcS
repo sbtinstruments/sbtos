@@ -22,28 +22,21 @@ mount -a
 ################################################################################
 # Determine active system partition
 ################################################################################
-system0_version=$(awk -F= "{print \$2}" /media/system0/boot/version.txt 2> /dev/null)
-system1_version=$(awk -F= "{print \$2}" /media/system1/boot/version.txt 2> /dev/null)
-
-# Non-numbers get set to -1
-if ! echo $system0_version | egrep -q '^[0-9]+$'; then
-	system0_version=-1
-fi
-if ! echo $system1_version | egrep -q '^[0-9]+$'; then
-	system1_version=-1
-fi
-
-if [ "$system0_version" -gt "$system1_version" ]; then
-	active_system=/media/system0
-	inactive_system=/media/system1
+active_system=`fw_printenv active_system | awk 'BEGIN {FS="="}; {print $2}'`
+if [ $active_system == "0" ]; then
+	inactive_system=1
+elif [ $active_system == "1" ]; then
+	inactive_system=0
 else
-	active_system=/media/system1
-	inactive_system=/media/system0
+	echo "rcS: [WARNING] Could not determine which system is the active one."
+	echo "rcS: [WARNING] Assuming that system 0 is the active one."
+	active_system=0
+	inactive_system=1
 fi
 
 # Set system partitions
-ln -s $active_system /media/system
-ln -s $inactive_system /media/inactive_system
+ln -s /media/system$active_system /media/system
+ln -s /media/system$inactive_system /media/inactive_system
 echo "rcS: [INFO] active_system=$active_system"
 echo "rcS: [INFO] inactive_system=$inactive_system"
 
@@ -91,7 +84,6 @@ mergeddir=/root
 options=lowerdir=$lowerdir,upperdir=$upperdir,workdir=$workdir
 mount -t overlay overlay -o $options $mergeddir
 
-
 ################################################################################
 # Hostname
 ################################################################################
@@ -110,6 +102,14 @@ mkdir -p /media/data/chrony
 mkdir -p /media/data/log
 mkdir -p /media/data/logrotate
 mkdir -p /media/data/srv
+
+################################################################################
+# Monit
+################################################################################
+# Fix permissions of the monitrc file.
+# Ideally, said permissions should be built into the rootfs image but
+# buildroot won't allow it.
+chmod 700 /media/rootfs/etc/monitrc
 
 ################################################################################
 # Startup scripts
