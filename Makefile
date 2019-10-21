@@ -91,9 +91,9 @@ endif
 ###############################################################################
 ### SWUpdate
 ###############################################################################
-zeus.swu: sw-description \
-          swupdate.sh \
-          system.img
+zeus-software.swu: sw-description \
+                   swupdate.sh \
+                   system.img
 	# Add the dependencies (in the listed order) to the CPIO
 	# archive. Note that the sw-description file must come first
 	# for SWUpdate to work.
