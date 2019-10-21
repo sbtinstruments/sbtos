@@ -1,7 +1,7 @@
 software =
 {
 	version = "{VERSION}";
-	description = "Software update for SBT Instrument devices";
+	description = "Software update for SBT Instruments devices";
 	zeus = {
 		hardware-compatibility: ["1.0.0"];
 		scripts: (
