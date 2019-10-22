@@ -35,7 +35,7 @@ else
 fi
 
 # Set system partitions
-ln -s /media/system$active_system /media/system
+ln -s /media/system$active_system /media/active_system
 ln -s /media/system$inactive_system /media/inactive_system
 echo "rcS: [INFO] active_system=$active_system"
 echo "rcS: [INFO] inactive_system=$inactive_system"
