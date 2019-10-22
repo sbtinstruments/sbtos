@@ -1,6 +1,6 @@
 software =
 {
-	version = "{VERSION}";
+	version = "not-applicable";
 	description = "Software update for SBT Instruments devices";
 	zeus = {
 		hardware-compatibility: ["1.0.0"];
@@ -13,8 +13,12 @@ software =
 		images: (
 			{
 				name = "software";
+				version = "{VERSION}";
 				filename = "system.img";
 				device = "/dev/mmcblk0update";
+				# Software is always installed (even if the versions match) since
+				# that the "swupdate.sh" script will switch the active/inactive
+				# systems around.
 			}
 		);
 	}
