@@ -12,7 +12,7 @@ software =
 		);
 		images: (
 			{
-				name = "system";
+				name = "software";
 				filename = "system.img";
 				device = "/dev/mmcblk0update";
 			}
