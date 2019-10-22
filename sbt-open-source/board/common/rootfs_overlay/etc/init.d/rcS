@@ -112,6 +112,18 @@ mkdir -p /media/data/srv
 chmod 700 /media/rootfs/etc/monitrc
 
 ################################################################################
+# Software versions
+################################################################################
+# /etc/sw-versions is used by SWUpdate to determine the currently installed
+# versions.
+firmware_version=`fw_printenv firmware_version \
+	| awk 'BEGIN {FS="="}; {print $2}'`
+software_version=`cat /etc/os-release | grep "VERSION=" \
+	| awk 'BEGIN {FS="="}; {print $2}'`
+echo -e "firmware $firmware_version\nsoftware $software_version" \
+	> /etc/sw-versions
+
+################################################################################
 # Startup scripts
 ################################################################################
 echo "rcS: [INFO] Running all startup scripts"
