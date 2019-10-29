@@ -71,20 +71,20 @@ $(BUILDROOT_ARCHIVE):
 ###############################################################################
 ### Install remote
 ###############################################################################
-install-remote: remote_host_defined $(ROOTFS)
-	ssh $(remote_host) "/bin/mount -o rw,remount \$$(readlink /media/system)"
-	scp $(ROOTFS) $(remote_host):/boot/uramdisk.image.gz
-	ssh $(remote_host) "/bin/mount -o ro,remount \$$(readlink /media/system)"
+install-remote: REMOTE_HOST_defined $(ROOTFS)
+	ssh $(REMOTE_HOST) "/bin/mount -o rw,remount \$$(readlink /media/active_system)"
+	scp $(ROOTFS) $(REMOTE_HOST):/boot/uramdisk.image.gz
+	ssh $(REMOTE_HOST) "/bin/mount -o ro,remount \$$(readlink /media/active_system)"
 
-kernel-install-remote: remote_host_defined install $(KERNEL)
-	ssh $(remote_host) "/bin/mount -o rw,remount \$$(readlink /media/system)"
-	scp $(KERNEL) $(remote_host):/boot/uImage
-	ssh $(remote_host) "/bin/mount -o ro,remount \$$(readlink /media/system)"
+kernel-install-remote: REMOTE_HOST_defined install $(KERNEL)
+	ssh $(REMOTE_HOST) "/bin/mount -o rw,remount \$$(readlink /media/active_system)"
+	scp $(KERNEL) $(REMOTE_HOST):/boot/uImage
+	ssh $(REMOTE_HOST) "/bin/mount -o ro,remount \$$(readlink /media/active_system)"
 
-.PHONY: remote_host_defined
-remote_host_defined:
-ifndef remote_host
-	$(error remote_host is not set)
+.PHONY: REMOTE_HOST_defined
+REMOTE_HOST_defined:
+ifndef REMOTE_HOST
+	$(error REMOTE_HOST is not set)
 endif
 
 
