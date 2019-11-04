@@ -120,8 +120,10 @@ firmware_version=`fw_printenv firmware_version \
 	| awk 'BEGIN {FS="="}; {print $2}'`
 software_version=`cat /etc/os-release | grep "VERSION=" \
 	| awk 'BEGIN {FS="="}; {print $2}'`
+# Note that the resulting file is put into the ephemeral /media/rootfs/etc and
+# not the /etc that is backed by OverlayFS.
 echo -e "firmware $firmware_version\nsoftware $software_version" \
-	> /etc/sw-versions
+	> /media/rootfs/etc/sw-versions
 
 ################################################################################
 # Startup scripts
