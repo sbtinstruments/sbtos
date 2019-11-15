@@ -21,7 +21,7 @@ emount() {
 	local attempts=0
 	local max_attempts=10
 
-	while ! mount -t auto -o ro,defaults "/dev/$1" "${mount_dir}/$1" && [[ $attempts -lt $max_attempts ]]; do
+	while ! mount -t auto -o rw,defaults "/dev/$1" "${mount_dir}/$1" && [[ $attempts -lt $max_attempts ]]; do
 		logger "autorun: Failed to mount $1 (attempt $(expr $attempts + 1)/${max_attempts})"
 		sleep 1
 		attempts=$(expr $attempts + 1)
