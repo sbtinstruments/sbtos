@@ -1,0 +1,7 @@
+config BR2_PACKAGE_PYTHON_TYPING_EXTENSIONS
+	bool "python-typing-extensions"
+	help
+	  Work related to PEP 484: typing.py (released via PyPI) and issue tracker
+
+	  https://github.com/python/typing
+
