@@ -1,4 +1,5 @@
 source "$BR2_EXTERNAL_SBT_OPEN_SOURCE_PATH/package/influxdb/Config.in"
+source "$BR2_EXTERNAL_SBT_OPEN_SOURCE_PATH/package/python-aiohttp-sbt/Config.in"
 source "$BR2_EXTERNAL_SBT_OPEN_SOURCE_PATH/package/python-attrs-user/Config.in"
 source "$BR2_EXTERNAL_SBT_OPEN_SOURCE_PATH/package/python-distro/Config.in"
 source "$BR2_EXTERNAL_SBT_OPEN_SOURCE_PATH/package/python-idna_ssl/Config.in"
