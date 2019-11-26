@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PYTHON_AIOHTTP_SBT_VERSION = refs/tags/v3.6.2-sbt.0
+PYTHON_AIOHTTP_SBT_VERSION = refs/tags/v3.6.2-sbt.1
 PYTHON_AIOHTTP_SBT_SITE = https://github.com/sbtinstruments/aiohttp.git
 PYTHON_AIOHTTP_SBT_SITE_METHOD = git
 # For the http-parser submodule
