@@ -1,10 +1,6 @@
 #
 # Copyright 2019 Frederik Peter Aalund <fpa@sbtinstruments.com>
 #
-GIT_DESCRIPTION=$(shell git describe --tags --dirty --always \
-	--match v[0-9][0-9][0-9][0-9]\.[0-9][0-9]\.[0-9]*)
-# Strip leading 'v' from GIT_DESCRIPTION
-VERSION=$(GIT_DESCRIPTION:v%=%)
 BUILDROOT_SERVER=http://buildroot.uclibc.org/downloads
 BUILDROOT_VERSION=2019.08
 BUILDROOT_ARCHIVE=buildroot-$(BUILDROOT_VERSION).tar.gz
@@ -13,6 +9,9 @@ ROOTFS=buildroot/output/images/rootfs.cpio.uboot
 KERNEL=buildroot/output/images/uImage
 OSRELEASE=sbt-open-source/board/common/rootfs_overlay/etc/os-release
 PROCESSORS=$(shell grep -c ^processor /proc/cpuinfo)
+# Hack to always execute the set-version target. This ensures that the
+# various files with {VERSION} template variables in them are up-to-date.
+ALWAYS_SET_VERSION:=$(shell ./set-version.sh)
 
 
 
@@ -101,26 +100,6 @@ zeus-software.swu: sw-description \
 	for f in $^; do \
 		echo $$f; \
 	done | cpio -ov -H crc -O $@
-
-
-
-###############################################################################
-### Version
-###############################################################################
-sw-description $(OSRELEASE): set-version
-
-# Only touch files if the checksum is different. This way, we avoid
-# unnecessary rebuilds when make is called.
-.PHONY: set-version
-set-version:
-	# sw-description.in
-	sed "s/{VERSION}/$(VERSION)/g" sw-description.in \
-		> /tmp/sbtos-set-version-output
-	rsync -c /tmp/sbtos-set-version-output sw-description
-	# os-release.in
-	sed "s/{VERSION}/$(VERSION)/g" os-release.in \
-		> /tmp/sbtos-set-version-output
-	rsync -c /tmp/sbtos-set-version-output $(OSRELEASE)
 
 
 
