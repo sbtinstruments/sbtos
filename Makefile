@@ -109,7 +109,7 @@ zeus-software.swu: sw-description \
 .PHONY: clean
 clean:
 	-$(MAKE) -C buildroot clean
-	rm -rf system system.img .os-release sw-description *.swu
+	rm -rf system system.img $(OSRELEASE) sw-description *.swu
 
 .PHONY: mrproper
 mrproper: clean
