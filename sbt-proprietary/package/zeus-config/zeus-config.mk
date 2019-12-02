@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-ZEUS_CONFIG_VERSION = v0.7.0
+ZEUS_CONFIG_VERSION = v0.8.0
 ZEUS_CONFIG_SITE = git@github.com:sbtinstruments/zeus-config.git
 ZEUS_CONFIG_SITE_METHOD = git
 ZEUS_CONFIG_LICENSE = PROPRIETARY
