@@ -1,9 +1,14 @@
-logger "autorun: ACTION=${ACTION} MDEV=${MDEV}"
+logger "autorun: ACTION=${ACTION} MDEV=${MDEV} DEVTYPE=${DEVTYPE}"
 
 mount_dir=/media
 
 if [ -z "${MDEV}" ]; then
 	logger "autorun: MDEV was not set. Exiting..."
+	exit 1
+fi
+
+if [ "${DEVTYPE}" == "disk" ]; then
+	logger "autorun: Device type is disk. Exiting..."
 	exit 1
 fi
 
@@ -44,11 +49,15 @@ autorun() {
 	fi
 }
 
+add() {
+	eumount $1
+	emount $1
+	autorun $1
+}
+
 case "${ACTION}" in
 	add)
-		eumount $MDEV
-		emount $MDEV
-		autorun $MDEV
+		add $MDEV
 		;;
 	remove)
 		eumount $MDEV
