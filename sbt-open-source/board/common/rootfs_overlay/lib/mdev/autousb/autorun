@@ -45,7 +45,7 @@ autorun() {
 	local autorunpy="${mount_dir}/$1/autorun.py"
 	if [ -x "$autorunpy" ]; then
 		logger "autorun: ${autorunpy}"
-		python "${autorunpy}"
+		python "${autorunpy}" | logger -t "autorun.py"
 	fi
 }
 
