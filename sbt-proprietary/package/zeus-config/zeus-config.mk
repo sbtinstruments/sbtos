@@ -4,8 +4,8 @@
 #
 ################################################################################
 
-ZEUS_CONFIG_VERSION = v0.9.0
-ZEUS_CONFIG_SITE = git@github.com:sbtinstruments/zeus-config.git
+ZEUS_CONFIG_VERSION = zeus-v0.9.0
+ZEUS_CONFIG_SITE = git@github.com:sbtinstruments/green-mango-config.git
 ZEUS_CONFIG_SITE_METHOD = git
 ZEUS_CONFIG_LICENSE = PROPRIETARY
 ZEUS_CONFIG_REDISTRIBUTE = NO

@@ -1,4 +1,5 @@
 source "$BR2_EXTERNAL_SBT_PROPRIETARY_PATH/package/alg/Config.in"
+source "$BR2_EXTERNAL_SBT_PROPRIETARY_PATH/package/bactobox-config/Config.in"
 source "$BR2_EXTERNAL_SBT_PROPRIETARY_PATH/package/python-algpy/Config.in"
 source "$BR2_EXTERNAL_SBT_PROPRIETARY_PATH/package/python-baxter/Config.in"
 source "$BR2_EXTERNAL_SBT_PROPRIETARY_PATH/package/python-cellmate/Config.in"

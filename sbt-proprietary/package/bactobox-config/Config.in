@@ -1,0 +1,5 @@
+config BR2_PACKAGE_BACTOBOX_CONFIG
+	bool "bactobox-config"
+	help
+	  BactoBox configuration files for /etc
+
