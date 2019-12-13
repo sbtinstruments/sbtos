@@ -1,37 +1,40 @@
 #
 # Copyright 2019 Frederik Peter Aalund <fpa@sbtinstruments.com>
 #
+
+# OUTPUT_DIR is relative to ./buildroot (E.g., ./buildroot/output/zeus)
+OUTPUT_DIR=output/$(TARGET)
 BUILDROOT_SERVER=http://buildroot.uclibc.org/downloads
 BUILDROOT_VERSION=2019.08
 BUILDROOT_ARCHIVE=buildroot-$(BUILDROOT_VERSION).tar.gz
-BUILDROOT_MAKE=$(MAKE) -C buildroot BR2_EXTERNAL=../sbt-open-source:../sbt-proprietary BR2_JLEVEL=$(PROCESSORS)
-ROOTFS=buildroot/output/images/rootfs.cpio.uboot
-KERNEL=buildroot/output/images/uImage
+BUILDROOT_MAKE=$(MAKE) -C buildroot BR2_EXTERNAL=../sbt-open-source:../sbt-proprietary BR2_JLEVEL=$(PROCESSORS) O=$(OUTPUT_DIR)
+ROOTFS=buildroot/$(OUTPUT_DIR)/images/rootfs.cpio.uboot
+KERNEL=buildroot/$(OUTPUT_DIR)/images/uImage
 OSRELEASE=sbt-open-source/board/common/rootfs_overlay/etc/os-release
 PROCESSORS=$(shell grep -c ^processor /proc/cpuinfo)
-# Hack to always execute the set-version target. This ensures that the
-# various files with {VERSION} template variables in them are up-to-date.
-ALWAYS_SET_VERSION:=$(shell ./set-version.sh)
+# Hack to always execute the script. This ensures that the
+# various files with {PLACEHOLDER} variables in them are up-to-date.
+ALWAYS_RUN:=$(shell ./substitute-placeholders.sh)
 
 
 
-all: system.img
+all: $(TARGET)-system.img
 
 
 
 ###############################################################################
 ### System image
 ###############################################################################
-SYSTEM_FILES=system/boot/uramdisk.image.gz \
-             system/boot/uImage
+SYSTEM_FILES=$(TARGET)-system/boot/uramdisk.image.gz \
+             $(TARGET)-system/boot/uImage
 
-system.img: $(SYSTEM_FILES)
+$(TARGET)-system.img: $(SYSTEM_FILES)
 	@rm -f $@
 	mke2fs \
 		-L "system" \
 		-N 0 \
 		-O 64bit \
-		-d "system" \
+		-d "$(TARGET)-system" \
 		-m 5 \
 		-r 1 \
 		-t ext4 \
@@ -39,23 +42,25 @@ system.img: $(SYSTEM_FILES)
 		150M \
 
 $(SYSTEM_FILES): $(ROOTFS) $(KERNEL)
-	@mkdir -p system/boot
-	cp $(ROOTFS) system/boot/uramdisk.image.gz
-	cp $(KERNEL) system/boot/uImage
+	@mkdir -p $(TARGET)-system/boot
+	cp $(ROOTFS) $(TARGET)-system/boot/uramdisk.image.gz
+	cp $(KERNEL) $(TARGET)-system/boot/uImage
 
 
 
 ###############################################################################
 ### Buildroot
 ###############################################################################
-$(ROOTFS): buildroot/.config $(OSRELEASE)
+$(ROOTFS): buildroot/$(OUTPUT_DIR)/.config $(OSRELEASE)
 	$(BUILDROOT_MAKE)
 
-$(KERNEL): buildroot/.config
+$(KERNEL): buildroot/$(OUTPUT_DIR)/.config
 	$(BUILDROOT_MAKE) linux-reinstall
 
-buildroot/.config: sbt-proprietary/configs/zeus_defconfig buildroot/Makefile
-	$(BUILDROOT_MAKE) zeus_defconfig
+buildroot/$(OUTPUT_DIR)/.config: TARGET_defined \
+                                 sbt-proprietary/configs/$(TARGET)_defconfig \
+                                 buildroot/Makefile
+	$(BUILDROOT_MAKE) $(TARGET)_defconfig
 
 buildroot/Makefile: $(BUILDROOT_ARCHIVE)
 	# E.g., extract "buildroot-2019.8.tar.gz" into "buildroot"
@@ -64,6 +69,12 @@ buildroot/Makefile: $(BUILDROOT_ARCHIVE)
 
 $(BUILDROOT_ARCHIVE):
 	wget $(BUILDROOT_SERVER)/$(BUILDROOT_ARCHIVE)
+
+.PHONY: TARGET_defined
+TARGET_defined:
+ifndef TARGET
+	$(error TARGET is not set)
+endif
 
 
 
@@ -91,9 +102,9 @@ endif
 ###############################################################################
 ### SWUpdate
 ###############################################################################
-zeus-software.swu: sw-description \
-                   swupdate.sh \
-                   system.img
+$(TARGET)-software.swu: sw-description \
+                        swupdate.sh \
+                        $(TARGET)-system.img
 	# Add the dependencies (in the listed order) to the CPIO
 	# archive. Note that the sw-description file must come first
 	# for SWUpdate to work.
@@ -109,7 +120,7 @@ zeus-software.swu: sw-description \
 .PHONY: clean
 clean:
 	-$(MAKE) -C buildroot clean
-	rm -rf system system.img $(OSRELEASE) sw-description *.swu
+	rm -rf *-system *-system.img $(OSRELEASE) sw-description *.swu
 
 .PHONY: mrproper
 mrproper: clean
