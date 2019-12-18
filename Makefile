@@ -115,6 +115,18 @@ $(TARGET)-software.swu: sw-description \
 
 
 ###############################################################################
+### Utility
+###############################################################################
+.PHONY: remove-%
+remove-%:
+	rm -rf buildroot/output/bactobox/build/$** \
+		buildroot/output/zeus/build/$**
+	touch sbt-proprietary/configs/bactobox_defconfig \
+		sbt-proprietary/configs/zeus_defconfig
+
+
+
+###############################################################################
 ### Housekeeping
 ###############################################################################
 .PHONY: clean
