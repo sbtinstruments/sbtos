@@ -1,0 +1,22 @@
+Makefile: remove 'install-cython' dependency from the 'cythonize' rule
+
+The 'install-cython' dependency invokes pip, which is not installed.
+This emits an error during build.
+
+Cython is already installed by buildroot, so there is no point to invoke
+pip anyhow.
+
+Signed-off-by: Frederik Peter Aalund <fpa@sbtinstruments.com>
+
+--- a/Makefile	2019-11-26 13:51:29.000000000 +0100
++++ b/Makefile	2020-01-08 15:14:25.258335143 +0100
+@@ -12,7 +12,7 @@ all: test
+ aiohttp/%.c: aiohttp/%.pyx
+ 	cython -3 -o $@ $< -I aiohttp
+ 
+-cythonize: .install-cython $(PYXS:.pyx=.c)
++cythonize: $(PYXS:.pyx=.c)
+ 
+ .install-deps: cythonize $(shell find requirements -type f)
+ 	pip install -r requirements/dev.txt
+
