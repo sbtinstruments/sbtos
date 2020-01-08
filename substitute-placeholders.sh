@@ -2,7 +2,7 @@
 GIT_DESCRIPTION=$(git describe --tags --dirty --always \
 	--match v[0-9][0-9][0-9][0-9]\.[0-9][0-9]\.[0-9]*)
 # Strip leading 'v' from GIT_DESCRIPTION
-VERSION=${GIT_DESCRIPTION:1}
+VERSION=${GIT_DESCRIPTION#?}
 
 # Only touch files if the checksum is different. This way, we avoid
 # unnecessary rebuilds when make is called.
