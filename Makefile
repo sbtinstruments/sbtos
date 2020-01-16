@@ -5,7 +5,7 @@
 # OUTPUT_DIR is relative to ./buildroot (E.g., ./buildroot/output/zeus)
 OUTPUT_DIR=output/$(TARGET)
 BUILDROOT_SERVER=http://buildroot.uclibc.org/downloads
-BUILDROOT_VERSION=2019.08
+BUILDROOT_VERSION=2019.11.1
 BUILDROOT_ARCHIVE=buildroot-$(BUILDROOT_VERSION).tar.gz
 BUILDROOT_MAKE=$(MAKE) -C buildroot BR2_EXTERNAL=../sbt-open-source:../sbt-proprietary BR2_JLEVEL=$(PROCESSORS) O=$(OUTPUT_DIR)
 ROOTFS=buildroot/$(OUTPUT_DIR)/images/rootfs.cpio.uboot
