@@ -1,0 +1,17 @@
+setup.py: remove twine dependency
+
+Twine is only used to upload the package to PyPi. We do not need to do that.
+
+Signed-off-by: Frederik Aalund <fpa@sbtinstruments.com>
+
+--- a/setup.py	2020-01-17 09:34:12.559628947 +0100
++++ b/setup.py	2020-01-17 09:34:20.055628947 +0100
+@@ -68,7 +68,6 @@ setup_kwargs = dict(
+         zip_safe=False,
+         setup_requires=[
+             "docutils",
+-            "twine",
+             ],
+         test_suite="setup.test_suite",
+         tests_require=test_requirements,
+
