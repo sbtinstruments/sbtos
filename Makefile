@@ -136,4 +136,4 @@ clean:
 
 .PHONY: mrproper
 mrproper: clean
-	rm -rf buildroot $(BUILDROOT_ARCHIVE)
+	rm -rf buildroot buildroot-*.tar.gz
