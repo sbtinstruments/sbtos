@@ -3,15 +3,17 @@
 #
 
 # OUTPUT_DIR is relative to ./buildroot (E.g., ./buildroot/output/zeus)
+PROCESSORS=$(shell grep -c ^processor /proc/cpuinfo)
 OUTPUT_DIR=output/$(TARGET)
 BUILDROOT_SERVER=http://buildroot.uclibc.org/downloads
 BUILDROOT_VERSION=2019.11.1
 BUILDROOT_ARCHIVE=buildroot-$(BUILDROOT_VERSION).tar.gz
-BUILDROOT_MAKE=$(MAKE) -C buildroot BR2_EXTERNAL=../sbt-open-source:../sbt-proprietary BR2_JLEVEL=$(PROCESSORS) O=$(OUTPUT_DIR)
+BUILDROOT_MAKE=$(MAKE) -C buildroot \
+	BR2_EXTERNAL=../sbt-open-source:../sbt-proprietary \
+	BR2_JLEVEL=$(PROCESSORS) O=$(OUTPUT_DIR)
 ROOTFS=buildroot/$(OUTPUT_DIR)/images/rootfs.cpio.uboot
 KERNEL=buildroot/$(OUTPUT_DIR)/images/uImage
 OSRELEASE=sbt-open-source/board/common/rootfs_overlay/etc/os-release
-PROCESSORS=$(shell grep -c ^processor /proc/cpuinfo)
 # Hack to always execute the script. This ensures that the
 # various files with {PLACEHOLDER} variables in them are up-to-date.
 ALWAYS_RUN:=$(shell ./substitute-placeholders.sh)
