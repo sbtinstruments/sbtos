@@ -71,17 +71,17 @@ bactobox-system/boot/uramdisk.image.gz:
 ### Buildroot
 ###############################################################################
 buildroot/output/zeus/images/rootfs.cpio.uboot: buildroot/output/zeus/.config $(OSRELEASE)
-buildroot/output/zeus/images/rootfs.cpio.uboot \
+buildroot/output/zeus/images/rootfs.cpio.uboot:
 	$(BUILDROOT_MAKE) O=output/zeus
 buildroot/output/bactobox/images/rootfs.cpio.uboot: buildroot/output/bactobox/.config $(OSRELEASE)
-buildroot/output/bactobox/images/rootfs.cpio.uboot \
+buildroot/output/bactobox/images/rootfs.cpio.uboot:
 	$(BUILDROOT_MAKE) O=output/bactobox
 
 buildroot/output/zeus/images/uImage: buildroot/output/zeus/.config
-buildroot/output/zeus/images/uImage \
+buildroot/output/zeus/images/uImage:
 	$(BUILDROOT_MAKE) O=output/zeus linux-reinstall
 buildroot/output/bactobox/images/uImage: buildroot/output/bactobox/.config
-buildroot/output/bactobox/images/uImage \
+buildroot/output/bactobox/images/uImage:
 	$(BUILDROOT_MAKE) O=output/bactobox linux-reinstall
 
 buildroot/output/zeus/.config: sbt-proprietary/configs/zeus_defconfig \
