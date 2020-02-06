@@ -67,10 +67,10 @@ bactobox-system/boot/uramdisk.image.gz:
 ###############################################################################
 ### Buildroot
 ###############################################################################
-buildroot/output/zeus/images/uramdisk.image.gz: buildroot/output/zeus/.config $(OSRELEASE)
-buildroot/output/bactobox/images/uramdisk.image.gz: buildroot/output/bactobox/.config $(OSRELEASE)
-buildroot/output/zeus/images/uramdisk.image.gz \
-buildroot/output/bactobox/images/uramdisk.image.gz:
+buildroot/output/zeus/images/rootfs.cpio.uboot: buildroot/output/zeus/.config $(OSRELEASE)
+buildroot/output/bactobox/images/rootfs.cpio.uboot: buildroot/output/bactobox/.config $(OSRELEASE)
+buildroot/output/zeus/images/rootfs.cpio.uboot \
+buildroot/output/bactobox/images/rootfs.cpio.uboot:
 	$(MAKE) -C buildroot \
 		BR2_EXTERNAL=../sbt-open-source:../sbt-proprietary \
 		BR2_JLEVEL=$(PROCESSORS) O=$(<D)
