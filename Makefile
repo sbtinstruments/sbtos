@@ -7,6 +7,9 @@ PROCESSORS=$(shell grep -c ^processor /proc/cpuinfo)
 BUILDROOT_SERVER=http://buildroot.uclibc.org/downloads
 BUILDROOT_VERSION=2019.11.1
 BUILDROOT_ARCHIVE=buildroot-$(BUILDROOT_VERSION).tar.gz
+BUILDROOT_MAKE=$(MAKE) -C buildroot \
+	BR2_EXTERNAL=../sbt-open-source:../sbt-proprietary \
+	BR2_JLEVEL=$(PROCESSORS)
 OSRELEASE=sbt-open-source/board/common/rootfs_overlay/etc/os-release
 # Hack to always execute the script. This ensures that the
 # various files with {PLACEHOLDER} variables in them are up-to-date.
@@ -68,31 +71,25 @@ bactobox-system/boot/uramdisk.image.gz:
 ### Buildroot
 ###############################################################################
 buildroot/output/zeus/images/rootfs.cpio.uboot: buildroot/output/zeus/.config $(OSRELEASE)
-buildroot/output/bactobox/images/rootfs.cpio.uboot: buildroot/output/bactobox/.config $(OSRELEASE)
 buildroot/output/zeus/images/rootfs.cpio.uboot \
-buildroot/output/bactobox/images/rootfs.cpio.uboot:
-	$(MAKE) -C buildroot \
-		BR2_EXTERNAL=../sbt-open-source:../sbt-proprietary \
-		BR2_JLEVEL=$(PROCESSORS) O=$(<D)
+	$(BUILDROOT_MAKE) O=output/zeus
+buildroot/output/bactobox/images/rootfs.cpio.uboot: buildroot/output/bactobox/.config $(OSRELEASE)
+buildroot/output/bactobox/images/rootfs.cpio.uboot \
+	$(BUILDROOT_MAKE) O=output/bactobox
 
 buildroot/output/zeus/images/uImage: buildroot/output/zeus/.config
-buildroot/output/bactobox/images/uImage: buildroot/output/bactobox/.config
 buildroot/output/zeus/images/uImage \
-buildroot/output/bactobox/images/uImage:
-	$(MAKE) -C buildroot \
-		BR2_EXTERNAL=../sbt-open-source:../sbt-proprietary \
-		BR2_JLEVEL=$(PROCESSORS) O=$(<D) linux-reinstall
+	$(BUILDROOT_MAKE) O=output/zeus linux-reinstall
+buildroot/output/bactobox/images/uImage: buildroot/output/bactobox/.config
+buildroot/output/bactobox/images/uImage \
+	$(BUILDROOT_MAKE) O=output/bactobox linux-reinstall
 
 buildroot/output/zeus/.config: sbt-proprietary/configs/zeus_defconfig \
                                buildroot/Makefile
-	$(MAKE) -C buildroot \
-		BR2_EXTERNAL=../sbt-open-source:../sbt-proprietary \
-		BR2_JLEVEL=$(PROCESSORS) O=$(<D) zeus_defconfig
+	$(BUILDROOT_MAKE) O=output/zeus $(<F)
 buildroot/output/bactobox/.config: sbt-proprietary/configs/bactobox_defconfig \
                                    buildroot/Makefile
-	$(MAKE) -C buildroot \
-		BR2_EXTERNAL=../sbt-open-source:../sbt-proprietary \
-		BR2_JLEVEL=$(PROCESSORS) O=$(<D) bactobox_defconfig
+	$(BUILDROOT_MAKE) O=output/bactobox $(<F)
 
 buildroot/Makefile: $(BUILDROOT_ARCHIVE)
 	# E.g., extract "buildroot-2019.8.tar.gz" into "buildroot"
