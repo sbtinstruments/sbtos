@@ -4,15 +4,9 @@
 
 # OUTPUT_DIR is relative to ./buildroot (E.g., ./buildroot/output/zeus)
 PROCESSORS=$(shell grep -c ^processor /proc/cpuinfo)
-OUTPUT_DIR=output/$(TARGET)
 BUILDROOT_SERVER=http://buildroot.uclibc.org/downloads
 BUILDROOT_VERSION=2019.11.1
 BUILDROOT_ARCHIVE=buildroot-$(BUILDROOT_VERSION).tar.gz
-BUILDROOT_MAKE=$(MAKE) -C buildroot \
-	BR2_EXTERNAL=../sbt-open-source:../sbt-proprietary \
-	BR2_JLEVEL=$(PROCESSORS) O=$(OUTPUT_DIR)
-ROOTFS=buildroot/$(OUTPUT_DIR)/images/rootfs.cpio.uboot
-KERNEL=buildroot/$(OUTPUT_DIR)/images/uImage
 OSRELEASE=sbt-open-source/board/common/rootfs_overlay/etc/os-release
 # Hack to always execute the script. This ensures that the
 # various files with {PLACEHOLDER} variables in them are up-to-date.
@@ -20,49 +14,85 @@ ALWAYS_RUN:=$(shell ./substitute-placeholders.sh)
 
 
 
-all: $(TARGET)-system.img
+all: bactobox-system.img zeus-system.img
 
 
 
 ###############################################################################
 ### System image
 ###############################################################################
-SYSTEM_FILES=$(TARGET)-system/boot/uramdisk.image.gz \
-             $(TARGET)-system/boot/uImage
-
-$(TARGET)-system.img: $(SYSTEM_FILES)
+zeus-system.img: zeus-system/boot/uramdisk.image.gz \
+                 zeus-system/boot/uImage
 	@rm -f $@
 	mke2fs \
 		-L "system" \
 		-N 0 \
 		-O 64bit \
-		-d "$(TARGET)-system" \
+		-d "zeus-system" \
 		-m 5 \
 		-r 1 \
 		-t ext4 \
 		"$@" \
-		150M \
+		150M
+bactobox-system.img: bactobox-system/boot/uramdisk.image.gz \
+                     bactobox-system/boot/uImage
+	@rm -f $@
+	mke2fs \
+		-L "system" \
+		-N 0 \
+		-O 64bit \
+		-d "bactobox-system" \
+		-m 5 \
+		-r 1 \
+		-t ext4 \
+		"$@" \
+		150M
 
-$(SYSTEM_FILES): $(ROOTFS) $(KERNEL)
-	@mkdir -p $(TARGET)-system/boot
-	cp $(ROOTFS) $(TARGET)-system/boot/uramdisk.image.gz
-	cp $(KERNEL) $(TARGET)-system/boot/uImage
+zeus-system/boot/uImage: buildroot/output/zeus/images/uImage
+zeus-system/boot/uramdisk.image.gz: buildroot/output/zeus/images/rootfs.cpio.uboot
+zeus-system/boot/uImage \
+zeus-system/boot/uramdisk.image.gz:
+	@mkdir -p zeus-system/boot
+	cp $< $@
+
+bactobox-system/boot/uImage: buildroot/output/bactobox/images/uImage
+bactobox-system/boot/uramdisk.image.gz: buildroot/output/bactobox/images/rootfs.cpio.uboot
+bactobox-system/boot/uImage \
+bactobox-system/boot/uramdisk.image.gz:
+	@mkdir -p bactobox-system/boot
+	cp $< $@
 
 
 
 ###############################################################################
 ### Buildroot
 ###############################################################################
-$(ROOTFS): buildroot/$(OUTPUT_DIR)/.config $(OSRELEASE)
-	$(BUILDROOT_MAKE)
+buildroot/output/zeus/images/uramdisk.image.gz: buildroot/output/zeus/.config $(OSRELEASE)
+buildroot/output/bactobox/images/uramdisk.image.gz: buildroot/output/bactobox/.config $(OSRELEASE)
+buildroot/output/zeus/images/uramdisk.image.gz \
+buildroot/output/bactobox/images/uramdisk.image.gz:
+	$(MAKE) -C buildroot \
+		BR2_EXTERNAL=../sbt-open-source:../sbt-proprietary \
+		BR2_JLEVEL=$(PROCESSORS) O=$(<D)
 
-$(KERNEL): buildroot/$(OUTPUT_DIR)/.config
-	$(BUILDROOT_MAKE) linux-reinstall
+buildroot/output/zeus/images/uImage: buildroot/output/zeus/.config
+buildroot/output/bactobox/images/uImage: buildroot/output/bactobox/.config
+buildroot/output/zeus/images/uImage \
+buildroot/output/bactobox/images/uImage:
+	$(MAKE) -C buildroot \
+		BR2_EXTERNAL=../sbt-open-source:../sbt-proprietary \
+		BR2_JLEVEL=$(PROCESSORS) O=$(<D) linux-reinstall
 
-buildroot/$(OUTPUT_DIR)/.config: TARGET_defined \
-                                 sbt-proprietary/configs/$(TARGET)_defconfig \
-                                 buildroot/Makefile
-	$(BUILDROOT_MAKE) $(TARGET)_defconfig
+buildroot/output/zeus/.config: sbt-proprietary/configs/zeus_defconfig \
+                               buildroot/Makefile
+	$(MAKE) -C buildroot \
+		BR2_EXTERNAL=../sbt-open-source:../sbt-proprietary \
+		BR2_JLEVEL=$(PROCESSORS) O=$(<D) zeus_defconfig
+buildroot/output/bactobox/.config: sbt-proprietary/configs/bactobox_defconfig \
+                                   buildroot/Makefile
+	$(MAKE) -C buildroot \
+		BR2_EXTERNAL=../sbt-open-source:../sbt-proprietary \
+		BR2_JLEVEL=$(PROCESSORS) O=$(<D) bactobox_defconfig
 
 buildroot/Makefile: $(BUILDROOT_ARCHIVE)
 	# E.g., extract "buildroot-2019.8.tar.gz" into "buildroot"
@@ -71,12 +101,6 @@ buildroot/Makefile: $(BUILDROOT_ARCHIVE)
 
 $(BUILDROOT_ARCHIVE):
 	wget $(BUILDROOT_SERVER)/$(BUILDROOT_ARCHIVE)
-
-.PHONY: TARGET_defined
-TARGET_defined:
-ifndef TARGET
-	$(error TARGET is not set)
-endif
 
 
 
