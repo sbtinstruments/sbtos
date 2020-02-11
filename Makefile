@@ -104,11 +104,13 @@ $(BUILDROOT_ARCHIVE):
 ###############################################################################
 ### Install remote
 ###############################################################################
+ROOTFS=${TARGET}-system/boot/uramdisk.image.gz
 install-remote: REMOTE_HOST_defined $(ROOTFS)
 	ssh $(REMOTE_HOST) "/bin/mount -o rw,remount \$$(readlink /media/active_system)"
 	scp $(ROOTFS) $(REMOTE_HOST):/boot/uramdisk.image.gz
 	ssh $(REMOTE_HOST) "/bin/mount -o ro,remount \$$(readlink /media/active_system)"
 
+KERNEL=${TARGET}-system/boot/uImage
 kernel-install-remote: REMOTE_HOST_defined install $(KERNEL)
 	ssh $(REMOTE_HOST) "/bin/mount -o rw,remount \$$(readlink /media/active_system)"
 	scp $(KERNEL) $(REMOTE_HOST):/boot/uImage
