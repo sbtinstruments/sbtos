@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PYTHON_CELLMATE_VERSION = refs/tags/v1.0.0-rc.1
+PYTHON_CELLMATE_VERSION = refs/tags/v1.0.0-rc.2
 PYTHON_CELLMATE_SITE = git@github.com:sbtinstruments/cellmate.git
 PYTHON_CELLMATE_SITE_METHOD = git
 PYTHON_CELLMATE_SETUP_TYPE = setuptools
