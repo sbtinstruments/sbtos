@@ -145,7 +145,8 @@ $(TARGET)-software.swu: sw-description \
 .PHONY: remove-%
 remove-%:
 	rm -rf buildroot/output/bactobox/build/$** \
-		buildroot/output/zeus/build/$**
+		buildroot/output/zeus/build/$** \
+		buildroot/dl/$**
 	touch sbt-proprietary/configs/bactobox_defconfig \
 		sbt-proprietary/configs/zeus_defconfig
 
