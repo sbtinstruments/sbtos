@@ -14,6 +14,12 @@ INFLUXDB_BUILD_BIN_DIR = $(@D)/influxdb-$(INFLUXDB_VERSION)-1/usr/bin
 INFLUXDB_BIN_INFLUXD = ${INFLUXDB_BUILD_BIN_DIR}/influxd
 INFLUXDB_BIN_INFLUX = ${INFLUXDB_BUILD_BIN_DIR}/influx
 
+define INFLUXDB_COPY_LICENSE
+	cp $(INFLUXDB_PKGDIR)/LICENSE $(@D)
+endef
+
+INFLUXDB_POST_EXTRACT_HOOKS += INFLUXDB_COPY_LICENSE
+
 define INFLUXDB_BUILD_CMDS
 	@echo "INFO: Not building. We use a pre-built binary for linux-armhf."
 endef
