@@ -13,6 +13,12 @@ TELEGRAF_LICENSE_FILES = LICENSE
 TELEGRAF_BUILD_BIN_DIR = $(@D)/telegraf/usr/bin
 TELEGRAF_BIN_TELEGRAF = ${TELEGRAF_BUILD_BIN_DIR}/telegraf
 
+define TELEGRAF_COPY_LICENSE
+	cp $(TELEGRAF_PKGDIR)/LICENSE $(@D)
+endef
+
+TELEGRAF_POST_EXTRACT_HOOKS += TELEGRAF_COPY_LICENSE
+
 define TELEGRAF_BUILD_CMDS
 	@echo "INFO: Not building. We use a pre-built binary for linux-armhf."
 endef
