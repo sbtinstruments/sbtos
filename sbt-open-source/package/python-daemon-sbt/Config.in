@@ -1,6 +1,5 @@
 config BR2_PACKAGE_PYTHON_DAEMON_SBT
 	bool "python-daemon-sbt"
-	select BR2_PACKAGE_PYTHON_DOCUTILS # runtime
 	help
 	  Library to implement a well-behaved Unix daemon process.
 
