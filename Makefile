@@ -70,19 +70,38 @@ bactobox-system/boot/uramdisk.image.gz:
 ###############################################################################
 ### Buildroot
 ###############################################################################
-buildroot/output/zeus/images/rootfs.cpio.uboot: buildroot/output/zeus/.config $(OSRELEASE)
-buildroot/output/zeus/images/rootfs.cpio.uboot:
+buildroot/output/zeus/images/rootfs.cpio.uboot: $(OSRELEASE) \
+                                buildroot/output/zeus/target/etc/legal-info.zip
 	$(BUILDROOT_MAKE) O=output/zeus
-buildroot/output/bactobox/images/rootfs.cpio.uboot: buildroot/output/bactobox/.config $(OSRELEASE)
-buildroot/output/bactobox/images/rootfs.cpio.uboot:
+buildroot/output/bactobox/images/rootfs.cpio.uboot: $(OSRELEASE) \
+                            buildroot/output/bactobox/target/etc/legal-info.zip
 	$(BUILDROOT_MAKE) O=output/bactobox
 
 buildroot/output/zeus/images/uImage: buildroot/output/zeus/.config
-buildroot/output/zeus/images/uImage:
 	$(BUILDROOT_MAKE) O=output/zeus linux-reinstall
 buildroot/output/bactobox/images/uImage: buildroot/output/bactobox/.config
-buildroot/output/bactobox/images/uImage:
 	$(BUILDROOT_MAKE) O=output/bactobox linux-reinstall
+
+# Legal Information (Licensing and Acknowledgements)
+buildroot/output/zeus/target/etc/legal-info.zip: zeus-legal-info.html
+buildroot/output/bactobox/target/etc/legal-info.zip: bactobox-legal-info.html
+buildroot/output/zeus/target/etc/legal-info.zip \
+buildroot/output/bactobox/target/etc/legal-info.zip:
+	mkdir -p $(@D)
+	rm -f $@
+	zip $@ $<
+	# Rename file inside the ZIP archive.
+	# E.g., "zeus-legal-info.html" --> "legal-info.html"
+	printf "@ $(<F)\n@=legal-info.html\n" | zipnote -w $@
+
+.PHONY: zeus-legal-info.html
+zeus-legal-info.html: buildroot/output/zeus/.config
+	$(BUILDROOT_MAKE) O=output/zeus legal-info
+	python3.8 -m legal-info zeus
+.PHONY: bactobox-legal-info.html
+bactobox-legal-info.html: buildroot/output/bactobox/.config
+	$(BUILDROOT_MAKE) O=output/bactobox legal-info
+	python3.8 -m legal-info bactobox
 
 buildroot/output/zeus/.config: sbt-proprietary/configs/zeus_defconfig \
                                buildroot/Makefile
@@ -158,7 +177,8 @@ remove-%:
 .PHONY: clean
 clean:
 	-$(MAKE) -C buildroot clean
-	rm -rf *-system *-system.img $(OSRELEASE) sw-description *.swu
+	rm -rf *-system *-system.img $(OSRELEASE) sw-description \
+		*.swu *-legal-info.html
 
 .PHONY: mrproper
 mrproper: clean

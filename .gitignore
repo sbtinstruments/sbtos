@@ -4,3 +4,5 @@
 /*-system.img
 /sw-description
 *.swu
+*-legal-info.html
+/legal-info/**/*.pyc
