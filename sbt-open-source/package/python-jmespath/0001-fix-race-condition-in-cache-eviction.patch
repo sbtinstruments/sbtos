@@ -1,0 +1,22 @@
+Fix: fix race condition in _free_cache_entries
+
+The fix was originally provided by Hannes Schmidt (https://github.com/hannes-ucsc).
+See the following GitHub pull request for reference:
+https://github.com/jmespath/jmespath.py/pull/197
+
+When/if the pull request is merged, we can remove this patch.
+
+Signed-off-by: Frederik Peter Aalund <fpa@sbtinstruments.com>
+
+--- a/jmespath/parser.py	2017-05-26 15:42:45.000000000 +0200
++++ b/jmespath/parser.py	2020-03-11 15:12:01.438522463 +0100
+@@ -490,7 +490,7 @@ class Parser(object):
+ 
+     def _free_cache_entries(self):
+         for key in random.sample(self._CACHE.keys(), int(self._MAX_SIZE / 2)):
+-            del self._CACHE[key]
++            self._CACHE.pop(key, None)
+ 
+     @classmethod
+     def purge(cls):
+
