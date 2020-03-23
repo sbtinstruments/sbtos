@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-ALG_VERSION = refs/tags/v2.0.0-rc.1
+ALG_VERSION = refs/tags/v2.0.0
 ALG_SITE = git@github.com:sbtinstruments/alg.git
 ALG_SITE_METHOD = git
 ALG_LICENSE = PROPRIETARY
