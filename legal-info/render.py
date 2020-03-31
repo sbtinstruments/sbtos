@@ -44,13 +44,13 @@ def render_html(device: str):
 	                                all_packages,
 	                                ignore=ignore)
 	log_acks(prop_acks)
-	prop_acks_html = render_acks(prop_acks)
+	prop_acks_html = render_acks(prop_acks, device)
 
 	nonprop_packages = {name: p
 	                    for name, p in packages.items()
 	                    if 'PROPRIETARY' not in p['license']['names']}
 	nonprop_acks = packages_to_acks(nonprop_packages)
-	nonprop_acks_html = render_acks(nonprop_acks)
+	nonprop_acks_html = render_acks(nonprop_acks, device)
 
 	sections.append(SEC_ACKNOWLEDGEMENTS.format(prop_acks=prop_acks_html,
 	                                            nonprop_acks=nonprop_acks_html))
@@ -66,11 +66,11 @@ def log_acks(acks):
 			_LOGGER.debug(f'\tlicense text: {ack["license"]["text"]}')
 
 
-def render_acks(acks) -> str:
-	return '\n'.join(render_ack(ack) for ack in acks)
+def render_acks(acks, device: str) -> str:
+	return '\n'.join(render_ack(ack, device) for ack in acks)
 
 
-def render_ack(ack: dict) -> str:
+def render_ack(ack: dict, device: str) -> str:
 	name = ack['name']
 	title = ack['title']
 	ver = ack['version']
@@ -104,16 +104,19 @@ def render_ack(ack: dict) -> str:
 
 	for license_file in license_files:
 		license_paths = [
-			f'buildroot/output/zeus/legal-info/licenses/{name}-{ver}/{license_file}',
-			f'buildroot/output/zeus/legal-info/host-licenses/{name}-{ver}/{license_file}',
-			f'buildroot/output/zeus/legal-info/host-licenses/{name}/{license_file}',
+			f'buildroot/output/{device}/legal-info/licenses/{name}-{ver}/{license_file}',
+			f'buildroot/output/{device}/legal-info/host-licenses/{name}-{ver}/{license_file}',
+			f'buildroot/output/{device}/legal-info/host-licenses/{name}/{license_file}',
 		]
+		license_content = None
 		for license_path in license_paths:
 			try:
 				with open(license_path) as f:
 					license_content = f.read()
 			except FileNotFoundError:
 				pass
+		if license_content is None:
+			raise RuntimeError(f'Could not find license for "{name}"')
 		text += f'<pre>{license_content}</pre>'
 
 	return f"""
