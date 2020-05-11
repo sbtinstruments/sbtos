@@ -55,8 +55,9 @@ PACKAGE_OVERLAY = _normalize({
 		'alg',
 		'pybind11',
 	},
-	# 3.0.0-rc.6
+	# 5.0.0
 	'python-dash': {
+		'python-asyncqt',
 		'python-geist',
 		'python-psutil',
 		'python-pyqt5',
@@ -292,6 +293,10 @@ PACKAGE_OVERLAY = _normalize({
 				'file': 'LICENSE.LGPLv3',
 			},
 		},
+	},
+	# 0.8.0
+	'python-asyncqt': {
+		'title': 'asyncqt'
 	},
 })
 
