@@ -1,0 +1,8 @@
+config BR2_PACKAGE_PYTHON_ASYNCQT
+	bool "python-asyncqt"
+	help
+	  asyncqt is an implementation of the PEP 3156 event-loop with Qt.
+	  This package is a fork of quamash focusing on modern Python versions,
+	  with some extra utilities, examples and simplified CI.
+
+	  https://github.com/gmarull/asyncqt
