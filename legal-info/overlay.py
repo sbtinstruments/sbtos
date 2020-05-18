@@ -63,9 +63,10 @@ PACKAGE_OVERLAY = _normalize({
 		'python-pyqt5',
 		'qt5svg',
 	},
-	# 1.0.0-rc.3
+	# 5.0.2
 	'python-cellmate': {
 		'python-geist',
+		'python-msgpack',
 	},
 	# 3.0.0-rc.6
 	'python-baxter': {
@@ -297,6 +298,10 @@ PACKAGE_OVERLAY = _normalize({
 	# 0.8.0
 	'python-asyncqt': {
 		'title': 'asyncqt'
+	},
+	# 1.0.0
+	'python-msgpack': {
+		'title': 'msgpack'
 	},
 })
 
