@@ -84,6 +84,7 @@ PACKAGE_OVERLAY = _normalize({
 	# 3.0.0-rc.5
 	'python-geist': {
 		'python-aiohttp-sbt',
+		'python-aiosql',
 		'python-daemon-sbt',
 		'python-jmespath',
 		'python-jsonpatch',
@@ -302,6 +303,10 @@ PACKAGE_OVERLAY = _normalize({
 	# 1.0.0
 	'python-msgpack': {
 		'title': 'msgpack'
+	},
+	# 3.0.0
+	'python-aiosql': {
+		'title': 'aiosql'
 	},
 })
 
