@@ -1,5 +1,6 @@
 source "$BR2_EXTERNAL_SBT_OPEN_SOURCE_PATH/package/influxdb/Config.in"
 source "$BR2_EXTERNAL_SBT_OPEN_SOURCE_PATH/package/python-aiohttp-sbt/Config.in"
+source "$BR2_EXTERNAL_SBT_OPEN_SOURCE_PATH/package/python-aiosql/Config.in"
 source "$BR2_EXTERNAL_SBT_OPEN_SOURCE_PATH/package/python-asyncqt/Config.in"
 source "$BR2_EXTERNAL_SBT_OPEN_SOURCE_PATH/package/python-attrs-user/Config.in"
 source "$BR2_EXTERNAL_SBT_OPEN_SOURCE_PATH/package/python-daemon-sbt/Config.in"

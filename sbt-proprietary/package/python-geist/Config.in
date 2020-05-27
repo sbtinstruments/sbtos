@@ -1,6 +1,7 @@
 config BR2_PACKAGE_PYTHON_GEIST
 	bool "python-geist"
 	select BR2_PACKAGE_PYTHON_AIOHTTP_SBT # runtime
+	select BR2_PACKAGE_PYTHON_AIOSQL # runtime
 	select BR2_PACKAGE_PYTHON_DAEMON_SBT # runtime
 	select BR2_PACKAGE_PYTHON_JMESPATH # runtime
 	select BR2_PACKAGE_PYTHON_JSONPATCH # runtime

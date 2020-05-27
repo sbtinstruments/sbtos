@@ -1,0 +1,6 @@
+config BR2_PACKAGE_PYTHON_AIOSQL
+	bool "python-aiosql"
+	help
+	  Simple SQL in Python
+
+	  https://github.com/nackjicholson/aiosql
