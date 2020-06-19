@@ -1,0 +1,67 @@
+#!/bin/sh
+
+# Reference:
+# [1] creating gadget: https://www.kernel.org/doc/Documentation/usb/gadget_configfs.txt
+# [2] gadget api:  https://www.kernel.org/doc/Documentation/ABI/stable/sysfs-class-udc
+# [3] config options: https://www.kernel.org/doc/Documentation/ABI/testing/configfs-usb-gadget
+
+hn=$(echo hostname)
+manufacturer=`cat /etc/hw-release | grep "MANUFACTURER=" | awk 'BEGIN {FS="="}; {print $2}'`
+pretty_name=`cat /etc/hw-release | grep "PRETTY_NAME=" | awk 'BEGIN {FS="="}; {print $2}'`
+
+# create partition 'storage.img'
+#TODO: remove the allocation from startup to save boot time
+dd if=/dev/zero of=/var/usb_gadget/storage.img count=10 bs=1M
+# set up loop device
+losetup -o 1048576 -f /var/usb_gadget/storage.img
+
+# format files system - will show up as Bactobox on host
+mkdosfs -n $pretty_name /dev/loop0
+
+# create,mount fs
+mkdir /media/usb_gadget
+mount /dev/loop0 /media/usb_gadget
+# unmount the usb_gadget
+umount /media/usb_gadget
+
+
+# 1. Creating USB gadget
+mount -t configfs none /sys/kernel/config
+cd /sys/kernel/config/usb_gadget
+
+mkdir mass_storage0
+cd mass_storage0
+# maximum endpoint 0 packet size
+#   echo "64" > bMaxPacketSize0
+# bcd device release number
+#   echo "0x200" > bcdUSB
+# bcd USB specification version number
+#   echo "0x100" > bcdDevice
+# By not setting idVendor and idProduct the value "0x0000" is used implicitly
+# echo "0x0000" > idVendor
+# echo "0x0000" > idProduct
+
+# Additional usb gadget configurations
+# Store these config informations in strings subdir
+mkdir strings/0x409 # US English
+# device is identified properly (e.g. lsusb)
+
+
+echo $($hn) > strings/0x409/serialnumber
+echo $($manufacturer) > strings/0x409/manufacturer
+echo $($pretty_name) > strings/0x409/product
+
+
+# 2. Creating the configurations see [3]
+mkdir configs/c1.1
+mkdir configs/c1.1/strings/0x409 # US English
+# 3. Creating the functions - attach UDC function
+mkdir functions/mass_storage.ms0
+
+# attach usb gadget to fs
+echo /dev/loop0 > functions/mass_storage.ms0/lun.0/file
+echo 1 > functions/mass_storage.ms0/lun.0/removable
+# 4. Associating the functions with their configurations
+ln -s functions/mass_storage.ms0 configs/c1.1/
+# 5. Enabling the gadget
+echo "ci_hdrc.0" > UDC
