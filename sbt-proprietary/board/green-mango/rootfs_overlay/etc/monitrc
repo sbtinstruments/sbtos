@@ -66,3 +66,7 @@ check process dash
         start program = "/etc/init.d/Adash start"
         stop program  = "/etc/init.d/Adash stop"
 
+check process staten
+        matching "python.*staten"
+        start program = "/etc/init.d/Astaten start"
+        stop program  = "/etc/init.d/Astaten stop"

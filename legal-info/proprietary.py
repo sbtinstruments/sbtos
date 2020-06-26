@@ -5,5 +5,6 @@ PROPRIETARY_EXECUTABLES = {
 	'python-dash',
 	'python-maskin',
 	'python-mester',
+	'python-staten',
 }
 

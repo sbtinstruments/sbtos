@@ -33,7 +33,7 @@ def _normalize(deps):
 #  * Using a proprietary license itself (for which we own a license),
 #  * using a compromise between a permissive and a copyleft license (e.g.,
 #    MPL or LGPL),
-#  * using a permissive license (e.g., MIT, Apache, BSD-3-clause), or,
+#  * using a permissive license (e.g., MIT, Apache, BSD-3-Clause), or,
 #  * released into the public domain.
 #
 # There isn't any software in this overlay that uses a strictly copyleft
@@ -80,6 +80,11 @@ PACKAGE_OVERLAY = _normalize({
 	# 2.0.0-rc.3
 	'python-mester': {
 		'python-geist',
+	},
+	# 0.1.0
+	'python-staten': {
+		'python-geist',
+		'python-asyncio-mqtt',
 	},
 	# 3.0.0-rc.5
 	'python-geist': {
@@ -307,6 +312,23 @@ PACKAGE_OVERLAY = _normalize({
 	# 3.0.0
 	'python-aiosql': {
 		'title': 'aiosql'
+	},
+	# 0.6.0
+	'python-asyncio-mqtt': {
+		'title': 'asyncio-mqtt',
+		'dependencies': {
+			'python-paho-mqtt',
+		},
+	},
+	# 1.4.0
+	'python-paho-mqtt': {
+		'title': 'paho-mqtt',
+		'license': {
+			'selected': {
+				'name': 'EDLv1.0',
+				'file': 'edl-v10',
+			},
+		},
 	},
 })
 

@@ -38,6 +38,7 @@ def render_html(device: str):
 		'python-geist',
 		'python-maskin',
 		'python-mester',
+		'python-staten',
 	}
 	prop_acks = executables_to_acks(PROP_EXES,
 	                                PACKAGE_OVERLAY,

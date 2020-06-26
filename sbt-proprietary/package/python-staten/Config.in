@@ -1,0 +1,7 @@
+config BR2_PACKAGE_PYTHON_STATEN
+	bool "python-staten"
+	select BR2_PACKAGE_PYTHON_GEIST # runtime
+	select BR2_PACKAGE_PYTHON_ASYNCIO_MQTT # runtime
+	help
+	  State management
+
