@@ -6,6 +6,10 @@ set logfile syslog
 #        #allow 192.168.0.0/255.255.255.0 # allow connections from the local network
 #        allow admin:monit      # require user 'admin' with password 'monit'
 
+
+
+### Third-party
+
 check process sshd
         with pidfile /var/run/sshd.pid
         start program "/etc/init.d/S50sshd start"
@@ -37,23 +41,15 @@ check process telegraf
         start program = "/etc/init.d/S82telegraf start"
         stop  program = "/etc/init.d/S82telegraf stop"
 
-check process maskin
-        matching "python.*maskin"
-        start program = "/etc/init.d/Amaskin start"
-        stop program  = "/etc/init.d/Amaskin stop"
-        if failed host localhost port 8083 within 2 cycles then restart
+
+
+### Maintained by SBT
 
 check process baxter
         matching "python.*baxter"
         start program = "/etc/init.d/Abaxter start"
         stop program  = "/etc/init.d/Abaxter stop"
         if failed host localhost port 8081 within 2 cycles then restart
-
-check process mester
-        matching "python.*mester"
-        start program = "/etc/init.d/Amester start"
-        stop program  = "/etc/init.d/Amester stop"
-        if failed host localhost port 8082 within 2 cycles then restart
 
 check process cellmate
         matching "python.*cellmate"
@@ -65,6 +61,23 @@ check process dash
         matching "python.*dash"
         start program = "/etc/init.d/Adash start"
         stop program  = "/etc/init.d/Adash stop"
+
+check process frog
+        matching "python.*frog"
+        start program = "/etc/init.d/Afrog start"
+        stop program  = "/etc/init.d/Afrog stop"
+
+check process maskin
+        matching "python.*maskin"
+        start program = "/etc/init.d/Amaskin start"
+        stop program  = "/etc/init.d/Amaskin stop"
+        if failed host localhost port 8083 within 2 cycles then restart
+
+check process mester
+        matching "python.*mester"
+        start program = "/etc/init.d/Amester start"
+        stop program  = "/etc/init.d/Amester stop"
+        if failed host localhost port 8082 within 2 cycles then restart
 
 check process staten
         matching "python.*staten"
