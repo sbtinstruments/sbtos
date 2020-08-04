@@ -317,11 +317,11 @@ PACKAGE_OVERLAY = _normalize({
 	'python-asyncio-mqtt': {
 		'title': 'asyncio-mqtt',
 		'dependencies': {
-			'python-paho-mqtt',
+			'python-paho-mqtt-sbt',
 		},
 	},
-	# 1.4.0
-	'python-paho-mqtt': {
+	# 1.5.0
+	'python-paho-mqtt-sbt': {
 		'title': 'paho-mqtt',
 		'license': {
 			'selected': {
