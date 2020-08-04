@@ -1,0 +1,6 @@
+config BR2_PACKAGE_PYTHON_RXPY_SBT
+	bool "python-rxpy-sbt"
+	help
+	  RxPY is a library for composing asynchronous and event-based programs using observable collections and pipable query operators in Python.
+
+	  https://rxpy.readthedocs.io/en/latest/
