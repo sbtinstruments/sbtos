@@ -1,6 +1,6 @@
 config BR2_PACKAGE_PYTHON_ASYNCIO_MQTT
 	bool "python-asyncio-mqtt"
-	select BR2_PACKAGE_PYTHON_PAHO_MQTT # runtime
+	select BR2_PACKAGE_PYTHON_PAHO_MQTT_SBT # runtime
 	help
 	  Idomatic asyncio wrapper around paho-mqtt
 
