@@ -1,0 +1,6 @@
+config BR2_PACKAGE_RM_NEUE
+	bool "rm-neue"
+	help
+	  RM Neue is a font by CoType Foundry.
+
+	  https://cotypefoundry.com/our-fonts/rm-neue/
