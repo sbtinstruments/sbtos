@@ -1,6 +1,9 @@
 # Get version from the repository
+# Note that the --match argument is a glob pattern and not regex
+# As such, it will also match stuff like "v1.1asd.0". Let's just
+# assume that nobody would make a tag like that.
 GIT_DESCRIPTION=$(git describe --tags --dirty --always \
-	--match v[0-9][0-9][0-9][0-9]\.[0-9][0-9]\.[0-9]*)
+	--match v[0-9]*.[0-9]*.[0-9]*)
 # Strip leading 'v' from GIT_DESCRIPTION
 VERSION=${GIT_DESCRIPTION#?}
 
