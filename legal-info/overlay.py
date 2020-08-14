@@ -61,7 +61,7 @@ PACKAGE_OVERLAY = _normalize({
 		'python-geist',
 		'python-psutil',
 		'python-pyqt5',
-		'python-evdev',
+		'python-evdev-sbt',
 		'qt5svg',
 	},
 	# 5.0.2
@@ -332,8 +332,8 @@ PACKAGE_OVERLAY = _normalize({
 		},
 	},
 	# 1.3.0
-	'python-evdev': {
-		'title': 'evdev',
+	'python-evdev-sbt': {
+		'title': 'python-evdev',
 	},
 })
 
