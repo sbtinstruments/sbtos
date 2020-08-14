@@ -11,6 +11,7 @@ RM_NEUE_LICENSE = PROPRIETARY
 RM_NEUE_REDISTRIBUTE = NO
 
 define RM_NEUE_INSTALL_TARGET_CMDS
+	mkdir -p $(TARGET_DIR)/usr/lib/fonts/
 	cp -R --no-dereference --preserve=mode,links -v $(@D)/* $(TARGET_DIR)/usr/lib/fonts/
 endef
 
