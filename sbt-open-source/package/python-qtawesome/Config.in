@@ -1,0 +1,8 @@
+config BR2_PACKAGE_PYTHON_QTAWESOME
+	bool "python-qtawesome"
+	select BR2_PACKAGE_PYTHON_QTPY # runtime
+	select BR2_PACKAGE_PYTHON_SIX # runtime
+	help
+	  Iconic fonts in PyQt and PySide applications
+
+	  https://github.com/spyder-ide/qtawesome

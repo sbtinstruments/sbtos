@@ -1,0 +1,6 @@
+config BR2_PACKAGE_PYTHON_QTPY
+	bool "python-qtpy"
+	help
+	  Provides an uniform layer to support PyQt5, PySide2, PyQt4 and PySide with a single codebase.
+
+	  https://github.com/spyder-ide/qtpy
