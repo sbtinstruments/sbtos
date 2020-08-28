@@ -1,8 +1,8 @@
 config BR2_PACKAGE_PYTHON_DASH
 	bool "python-dash"
 	depends on BR2_PACKAGE_PYTHON_PYQT5 # runtime
+	depends on BR2_PACKAGE_PYTHON_QTAWESOME # runtime
 	select BR2_PACKAGE_PYTHON_GEIST # runtime
 	select BR2_PACKAGE_PYTHON_PSUTIL # runtime
 	help
 	  Dashboard interface
-
