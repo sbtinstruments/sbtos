@@ -1,0 +1,17 @@
+setup.py: remove setup_requires
+
+We actually don't need the listed requirements to build utmp.
+
+Signed-off-by: Frederik Aalund <fpa@sbtinstruments.com>
+
+
+--- a/setup.py        2020-11-09 14:56:58.996252635 +0100
++++ b/setup.py    2020-11-09 14:57:08.536309101 +0100
+@@ -204,7 +204,6 @@ def setup_package():
+         test_suite='tests',
+         packages=setuptools.find_packages(exclude=['tests', 'tests.*']),
+         install_requires=install_reqs,
+-        setup_requires=['six', 'flake8'],
+         cmdclass=cmdclass,
+         tests_require=['pytest-cov', 'pytest'],
+         command_options=command_options,
