@@ -1,0 +1,4 @@
+config BR2_PACKAGE_PYTHON_UTMP
+	bool "python-utmp"
+	help
+	  Pure-Python library to decode/read utmp and wtmp files.

@@ -62,6 +62,7 @@ PACKAGE_OVERLAY = _normalize({
 		'python-psutil',
 		'python-pyqt5',
 		'python-evdev-sbt',
+		'python-utmp',
 		'qt5svg',
 	},
 	# 5.0.2
@@ -333,7 +334,11 @@ PACKAGE_OVERLAY = _normalize({
 	},
 	# 1.3.0
 	'python-evdev-sbt': {
-		'title': 'python-evdev',
+		'title': 'evdev',
+	},
+	# Specific commit: 780831bc7a
+	'python-utmp': {
+		'title': 'utmp',
 	},
 })
 

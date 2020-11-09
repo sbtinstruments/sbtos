@@ -20,6 +20,7 @@ source "$BR2_EXTERNAL_SBT_OPEN_SOURCE_PATH/package/python-paho-mqtt-sbt/Config.i
 source "$BR2_EXTERNAL_SBT_OPEN_SOURCE_PATH/package/python-qtawesome/Config.in"
 source "$BR2_EXTERNAL_SBT_OPEN_SOURCE_PATH/package/python-qtpy/Config.in"
 source "$BR2_EXTERNAL_SBT_OPEN_SOURCE_PATH/package/python-typing-extensions/Config.in"
+source "$BR2_EXTERNAL_SBT_OPEN_SOURCE_PATH/package/python-utmp/Config.in"
 source "$BR2_EXTERNAL_SBT_OPEN_SOURCE_PATH/package/rsyslog-user/Config.in"
 source "$BR2_EXTERNAL_SBT_OPEN_SOURCE_PATH/package/telegraf/Config.in"
 source "$BR2_EXTERNAL_SBT_OPEN_SOURCE_PATH/package/uchardet/Config.in"

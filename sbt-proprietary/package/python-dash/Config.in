@@ -4,5 +4,6 @@ config BR2_PACKAGE_PYTHON_DASH
 	depends on BR2_PACKAGE_PYTHON_QTAWESOME # runtime
 	select BR2_PACKAGE_PYTHON_GEIST # runtime
 	select BR2_PACKAGE_PYTHON_PSUTIL # runtime
+	select BR2_PACKAGE_PYTHON_UTMP # runtime
 	help
 	  Dashboard interface
