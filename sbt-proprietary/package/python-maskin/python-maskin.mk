@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PYTHON_MASKIN_VERSION = refs/tags/v6.1.0
+PYTHON_MASKIN_VERSION = refs/tags/v6.2.0
 PYTHON_MASKIN_SITE = git@github.com:sbtinstruments/maskin.git
 PYTHON_MASKIN_SITE_METHOD = git
 PYTHON_MASKIN_SETUP_TYPE = setuptools
