@@ -3,9 +3,9 @@
 #
 
 # OUTPUT_DIR is relative to ./buildroot (E.g., ./buildroot/output/zeus)
-PROCESSORS=$(shell grep -c ^processor /proc/cpuinfo)
+PROCESSORS?=$(shell grep -c ^processor /proc/cpuinfo)
 BUILDROOT_SERVER=http://buildroot.uclibc.org/downloads
-BUILDROOT_VERSION=2020.05-rc1
+BUILDROOT_VERSION=2020.11.1
 BUILDROOT_ARCHIVE=buildroot-$(BUILDROOT_VERSION).tar.gz
 BUILDROOT_MAKE=$(MAKE) -C buildroot \
 	BR2_EXTERNAL=../sbt-open-source:../sbt-proprietary \

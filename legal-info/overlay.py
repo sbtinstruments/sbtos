@@ -93,7 +93,7 @@ PACKAGE_OVERLAY = _normalize({
 		'python-aiohttp-sbt',
 		'python-aiosql',
 		'python-daemon-sbt',
-		'python-jmespath',
+		'python-jmespath-sbt',
 		'python-jsonpatch',
 		'python-jsonschema',
 		'python-restrictedpython',
@@ -139,8 +139,8 @@ PACKAGE_OVERLAY = _normalize({
 	'python-jsonpointer': {
 		'title': 'jsonpointer',
 	},
-	# 0.9.3
-	'python-jmespath': {
+	# 0.10.0
+	'python-jmespath-sbt': {
 		'title': 'jmespath',
 	},
 	# 1.0.0

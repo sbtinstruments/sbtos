@@ -14,10 +14,10 @@ PYTHON_AIOSQL_LICENSE_FILES = LICENSE
 # currently have helpers for poetry-based builds. Luckily, python-aiosql
 # is a pure-python library so we can simply copy the relevant files over.
 define PYTHON_AIOSQL_INSTALL_TARGET_CMDS
-	$(INSTALL) -m 755 -d $(TARGET_DIR)/usr/lib/python3.8/site-packages/aiosql
-	$(INSTALL) -m 644 $(@D)/aiosql/*.py $(TARGET_DIR)/usr/lib/python3.8/site-packages/aiosql
-	$(INSTALL) -m 755 -d $(TARGET_DIR)/usr/lib/python3.8/site-packages/aiosql/adapters
-	$(INSTALL) -m 644 $(@D)/aiosql/adapters/*.py $(TARGET_DIR)/usr/lib/python3.8/site-packages/aiosql/adapters
+	$(INSTALL) -m 755 -d $(TARGET_DIR)/usr/lib/python3.9/site-packages/aiosql
+	$(INSTALL) -m 644 $(@D)/aiosql/*.py $(TARGET_DIR)/usr/lib/python3.9/site-packages/aiosql
+	$(INSTALL) -m 755 -d $(TARGET_DIR)/usr/lib/python3.9/site-packages/aiosql/adapters
+	$(INSTALL) -m 644 $(@D)/aiosql/adapters/*.py $(TARGET_DIR)/usr/lib/python3.9/site-packages/aiosql/adapters
 endef
 
 $(eval $(generic-package))
