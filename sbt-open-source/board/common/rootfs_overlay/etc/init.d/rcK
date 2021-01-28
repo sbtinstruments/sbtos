@@ -12,6 +12,9 @@ echo "rcK: gracefully stopping daemons..." > /dev/kmsg
 # Stop monit first
 /etc/init.d/Amonit stop
 
+# Stop dash to avoid error meassage
+/etc/init.d/Adash stop
+
 # Stop asynchronous scripts
 for i in $(ls -r /etc/init.d/A??*) ;do
 	# Ignore dangling symlinks (if any).
