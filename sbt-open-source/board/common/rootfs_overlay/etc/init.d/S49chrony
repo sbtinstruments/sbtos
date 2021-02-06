@@ -14,6 +14,8 @@ case "$1" in
 	nohup /usr/sbin/chronyd >> /var/log/chrony/chrony.log 2>&1 &
 	;;
   stop)
+	printf "Synchronize with disk and RTC: "
+	chronyc -m offline dump writertc trimrtc
 	printf "Stopping chrony: "
 	killall chronyd && echo "OK" || echo "FAIL"
 	;;

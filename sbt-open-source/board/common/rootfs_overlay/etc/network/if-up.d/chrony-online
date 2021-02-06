@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# Mark the network time sources as online.
+# chrony will automatically update the system time
+# and RTC when it gets the real time from the network.
+chronyc online
+

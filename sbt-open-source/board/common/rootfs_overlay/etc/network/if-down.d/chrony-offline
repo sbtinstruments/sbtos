@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# Mark the network time sources as offline.
+# Synchronize time with disk and RTC.
+# While the system is offline, we rely on the RTC to
+# keep track of time across power cycles.
+chronyc -m offline dump writertc trimrtc
+
