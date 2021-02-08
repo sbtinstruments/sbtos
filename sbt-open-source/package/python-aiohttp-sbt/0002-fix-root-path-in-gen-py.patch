@@ -1,0 +1,17 @@
+tools: use relative ROOT path instead
+
+Signed-off-by: Frederik Peter Aalund <fpa@sbtinstruments.com>
+
+--- a/tools/gen.py    2021-02-07 16:23:47.967080350 +0100
++++ b/tools/gen.py        2021-02-07 16:23:52.111103717 +0100
+@@ -6,9 +6,7 @@ from collections import defaultdict
+ 
+ import multidict
+ 
+-ROOT = pathlib.Path.cwd()
+-while ROOT.parent != ROOT and not (ROOT / ".git").exists():
+-    ROOT = ROOT.parent
++ROOT = pathlib.Path(".")
+ 
+ 
+ def calc_headers(root):

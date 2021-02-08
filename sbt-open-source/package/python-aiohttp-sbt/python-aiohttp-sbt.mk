@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PYTHON_AIOHTTP_SBT_VERSION = refs/tags/v3.6.2-sbt.1
+PYTHON_AIOHTTP_SBT_VERSION = refs/tags/v3.7.3-sbt.0
 PYTHON_AIOHTTP_SBT_SITE = https://github.com/sbtinstruments/aiohttp.git
 PYTHON_AIOHTTP_SBT_SITE_METHOD = git
 # For the http-parser submodule
@@ -15,6 +15,13 @@ PYTHON_AIOHTTP_SBT_LICENSE_FILES = LICENSE.txt
 
 ifeq ($(BR2_PACKAGE_HOST_PYTHON_CYTHON),y)
 PYTHON_AIOHTTP_SBT_DEPENDENCIES += host-python-cython
+# Multidict for the ./tools/gen.py script
+# Unfortunately, the built-in "python-multidict" package can't
+# install on the host. Therefore, we use the "python-multidict-sbt"
+# package.
+# Note that at run-time (on the target), the we use the
+# built-in "python-multidict".
+PYTHON_AIOHTTP_SBT_DEPENDENCIES += host-python-multidict-sbt
 endif
 
 define PYTHON_AIOHTTP_SBT_CYTHONIZE

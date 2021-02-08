@@ -8,15 +8,14 @@ pip anyhow.
 
 Signed-off-by: Frederik Peter Aalund <fpa@sbtinstruments.com>
 
---- a/Makefile	2019-11-26 13:51:29.000000000 +0100
-+++ b/Makefile	2020-01-08 15:14:25.258335143 +0100
-@@ -12,7 +12,7 @@ all: test
- aiohttp/%.c: aiohttp/%.pyx
- 	cython -3 -o $@ $< -I aiohttp
+--- a/Makefile    2021-02-07 15:50:53.188657279 +0100
++++ b/Makefile    2021-02-07 15:51:00.660701937 +0100
+@@ -59,7 +59,7 @@ aiohttp/%.c: aiohttp/%.pyx $(call to-has
  
+ 
+ .PHONY: cythonize
 -cythonize: .install-cython $(PYXS:.pyx=.c)
 +cythonize: $(PYXS:.pyx=.c)
  
- .install-deps: cythonize $(shell find requirements -type f)
- 	pip install -r requirements/dev.txt
-
+ .install-deps: .install-cython $(PYXS:.pyx=.c) $(call to-hash,$(CYS) $(REQS))
+        pip install -r requirements/dev.txt
