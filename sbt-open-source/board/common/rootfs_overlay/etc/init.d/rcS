@@ -160,7 +160,23 @@ for i in /etc/init.d/A* ;do
 
 	case "$i" in
 		*Amonit)
+			# Delay monit by 30 seconds so that all other
+			# services have a chance to start normally first.
+			# Otherwise, monit may think that the other services
+			# failed to start and try to restart them.
 			nohup sh -c "sleep 30; $i start" > /dev/null &
+			;;
+		*Adash)
+			# HACK: Delay dash by 5 seconds so that the dependent
+			# services (mester, maskin, cellmate, etc.) have
+			# time to start first.
+			# This is due to a bug in the aiohttp (v3.7.3) HTTP client
+			# that corrupts the session when the initial connection
+			# fails. When the bug occurs, it's no longer possible
+			# to establish a connection.
+			# To work around the bug, we simply delay dash so that
+			# the initial connection to the dependent services succeeds.
+			nohup sh -c "sleep 20; $i start" > /dev/null &
 			;;
 		*)
 			nohup time sh $i start > /tmp/$(basename $i).log &
