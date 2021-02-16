@@ -7,6 +7,7 @@ config BR2_PACKAGE_ALG
 	select BR2_PACKAGE_BOOST_LOG
 	select BR2_PACKAGE_BOOST_SYSTEM
 	select BR2_PACKAGE_BOOST_THREAD
+	select BR2_PACKAGE_DLIB
 	help
 	  Bacteria detection algorithms
 
