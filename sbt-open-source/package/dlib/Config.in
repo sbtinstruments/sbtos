@@ -1,12 +1,7 @@
 config BR2_PACKAGE_DLIB
 	bool "dlib"
 	depends on BR2_INSTALL_LIBSTDCPP
-	depends on !(BR2_powerpc && BR2_TOOLCHAIN_USES_UCLIBC) # lapack
-	depends on BR2_PACKAGE_OPENBLAS_ARCH_SUPPORTS
 	depends on BR2_TOOLCHAIN_HAS_THREADS
-	select BR2_PACKAGE_JPEG
-	select BR2_PACKAGE_LIBPNG
-	select BR2_PACKAGE_OPENBLAS
 	help
 	  Dlib is a modern C++ toolkit containing machine learning
 	  algorithms and tools for creating complex software in C++
