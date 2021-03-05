@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PYTHON_FROG_VERSION = refs/tags/v1.3.3
+PYTHON_FROG_VERSION = refs/tags/v1.4.2
 PYTHON_FROG_SITE = git@github.com:sbtinstruments/frog.git
 PYTHON_FROG_SITE_METHOD = git
 PYTHON_FROG_SETUP_TYPE = setuptools
