@@ -13,6 +13,8 @@ CONCURRENTQUEUE_LICENSE_FILES = LICENSE.md
 define HOST_CONCURRENTQUEUE_INSTALL_CMDS
 	$(INSTALL) -D -m 0644 $(@D)/concurrentqueue.h $(STAGING_DIR)/usr/include/
 	$(INSTALL) -D -m 0644 $(@D)/blockingconcurrentqueue.h $(STAGING_DIR)/usr/include/
+	# Needed for later commits
+	# $(INSTALL) -D -m 0644 $(@D)/lightweightsemaphore.h $(STAGING_DIR)/usr/include/
 endef
 
 $(eval $(host-generic-package))
