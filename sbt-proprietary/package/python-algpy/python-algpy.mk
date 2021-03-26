@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PYTHON_ALGPY_VERSION = refs/tags/v2.1.0
+PYTHON_ALGPY_VERSION = refs/tags/v2.2.3
 PYTHON_ALGPY_SITE = git@github.com:sbtinstruments/alg.py.git
 PYTHON_ALGPY_SITE_METHOD = git
 PYTHON_ALGPY_LICENSE = PROPRIETARY
