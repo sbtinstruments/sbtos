@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-ALG_VERSION = 9fdf0fda9b5b1576193826705b008a2eb8829cf6
+ALG_VERSION = c0fcc27d25cf9d6ab4e6910a23a25d669936841b
 ALG_SITE = git@github.com:sbtinstruments/alg.git
 ALG_SITE_METHOD = git
 ALG_LICENSE = PROPRIETARY

@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PYTHON_MESTER_VERSION = refs/tags/v3.6.3
+PYTHON_MESTER_VERSION = refs/tags/v4.0.0
 PYTHON_MESTER_SITE = git@github.com:sbtinstruments/mester.git
 PYTHON_MESTER_SITE_METHOD = git
 PYTHON_MESTER_SETUP_TYPE = setuptools
