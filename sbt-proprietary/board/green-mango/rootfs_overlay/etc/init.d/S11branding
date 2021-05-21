@@ -1,0 +1,16 @@
+#/bin/sh
+
+branding=`cat /etc/hw-release | grep "BRANDING=" | awk 'BEGIN {FS="="}; {print $2}'`
+hwname=`cat /etc/hwrevision | awk 'BEGIN {FS=" "}; {print $1}'`
+
+if [ $hwname = "zeus" ] && [ $branding = "romer" ]; then
+        pretty_name="CytoQuant"
+elif [ $hwname = "zeus" ]; then
+        pretty_name="Zeus"
+elif [ $hwname = "bactobox" ]; then
+        pretty_name="BactoBox"
+else
+	pretty_name="What am I?"
+fi
+
+echo "PRETTY_NAME=\"${pretty_name}\"" > /etc/branding
