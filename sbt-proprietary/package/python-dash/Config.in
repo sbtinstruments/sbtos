@@ -5,5 +5,6 @@ config BR2_PACKAGE_PYTHON_DASH
 	select BR2_PACKAGE_PYTHON_GEIST # runtime
 	select BR2_PACKAGE_PYTHON_PSUTIL # runtime
 	select BR2_PACKAGE_PYTHON_UTMP # runtime
+	select BR2_PACKAGE_PYTHON_QASYNC # runtime
 	help
 	  Dashboard interface

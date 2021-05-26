@@ -57,7 +57,7 @@ PACKAGE_OVERLAY = _normalize({
 	},
 	# 5.0.0
 	'python-dash': {
-		'python-asyncqt',
+		'python-qasync',
 		'python-geist',
 		'python-psutil',
 		'python-pyqt5',
@@ -303,9 +303,9 @@ PACKAGE_OVERLAY = _normalize({
 			},
 		},
 	},
-	# 0.8.0
-	'python-asyncqt': {
-		'title': 'asyncqt'
+	# 0.14.0
+	'python-qasync': {
+		'title': 'qasync'
 	},
 	# 1.0.0
 	'python-msgpack': {

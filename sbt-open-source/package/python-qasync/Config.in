@@ -1,0 +1,7 @@
+config BR2_PACKAGE_PYTHON_QASYNC
+	bool "python-qasync"
+	help
+	  qasync allows coroutines to be used in PyQt/PySide applications by
+	  providing an implementation of the PEP 3156 event-loop.
+
+	  https://github.com/CabbageDevelopment/qasync
