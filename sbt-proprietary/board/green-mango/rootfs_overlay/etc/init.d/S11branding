@@ -10,7 +10,7 @@ elif [ $hwname = "zeus" ]; then
 elif [ $hwname = "bactobox" ]; then
         pretty_name="BactoBox"
 else
-	pretty_name="What am I?"
+	pretty_name="WhatAmI?"
 fi
 
-echo "PRETTY_NAME=\"${pretty_name}\"" > /etc/branding
+echo "PRETTY_NAME=\"${pretty_name}\"" > /media/rootfs/etc/branding
