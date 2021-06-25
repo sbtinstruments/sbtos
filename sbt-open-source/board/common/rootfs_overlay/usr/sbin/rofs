@@ -1,0 +1,4 @@
+#!/bin/sh
+# remount overlay filesystem
+# force the /etc ovleray dir to sync
+mount -t overlay overlay -o remount,lowerdir=/media/config/individual/etc:/etc,upperdir=/media/config/override/etc,workdir=/media/config/workdir/etc /etc
