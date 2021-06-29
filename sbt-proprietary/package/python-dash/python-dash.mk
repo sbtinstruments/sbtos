@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PYTHON_DASH_VERSION = refs/tags/v12.18.0
+PYTHON_DASH_VERSION = refs/tags/v12.19.0
 PYTHON_DASH_SITE = git@github.com:sbtinstruments/dash.git
 PYTHON_DASH_SITE_METHOD = git
 PYTHON_DASH_SETUP_TYPE = setuptools
