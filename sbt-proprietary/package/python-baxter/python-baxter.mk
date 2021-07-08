@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PYTHON_BAXTER_VERSION = refs/tags/v5.14.0
+PYTHON_BAXTER_VERSION = refs/tags/v5.15.0
 PYTHON_BAXTER_SITE = git@github.com:sbtinstruments/baxter.git
 PYTHON_BAXTER_SITE_METHOD = git
 PYTHON_BAXTER_SETUP_TYPE = setuptools
