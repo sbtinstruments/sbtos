@@ -6,7 +6,7 @@ config BR2_PACKAGE_PYTHON_GEIST
 	select BR2_PACKAGE_PYTHON_JMESPATH_SBT # runtime
 	select BR2_PACKAGE_PYTHON_JSONPATCH # runtime
 	select BR2_PACKAGE_PYTHON_JSONSCHEMA # runtime
-	select BR2_PACKAGE_PYTHON_RESTRICTEDPYTHON # runtime
+	select BR2_PACKAGE_PYTHON_PYDANTIC_SBT # runtime
 	help
 	  Daemonize a python program
 

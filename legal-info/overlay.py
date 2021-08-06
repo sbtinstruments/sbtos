@@ -96,7 +96,7 @@ PACKAGE_OVERLAY = _normalize({
 		'python-jmespath-sbt',
 		'python-jsonpatch',
 		'python-jsonschema',
-		'python-restrictedpython',
+		'python-pydantic-sbt',
 	},
 	# 3.6.2-sbt.1
 	'python-aiohttp-sbt': {
@@ -148,8 +148,8 @@ PACKAGE_OVERLAY = _normalize({
 		'title': 'idna',
 	},
 	# 4.0b4
-	'python-restrictedpython': {
-		'title': 'RestrictedPython',
+	'python-pydantic-sbt': {
+		'title': 'pydantic',
 	},
 	# 19.3.0
 	'python-attrs': {

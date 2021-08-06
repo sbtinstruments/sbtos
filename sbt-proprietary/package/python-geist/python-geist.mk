@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PYTHON_GEIST_VERSION = refs/tags/v6.13.0
+PYTHON_GEIST_VERSION = refs/tags/v7.0.0
 PYTHON_GEIST_SITE = git@github.com:sbtinstruments/geist.git
 PYTHON_GEIST_SITE_METHOD = git
 PYTHON_GEIST_SETUP_TYPE = setuptools
