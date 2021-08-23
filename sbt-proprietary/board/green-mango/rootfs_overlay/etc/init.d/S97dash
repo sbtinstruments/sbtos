@@ -7,7 +7,7 @@ else
 fi
 if [ -r /etc/default/locale ]
 then
-    export $(cat /etc/default/locale | xargs)
+    export $(cat /etc/default/locale | xargs) > /dev/null
 fi
 
 case "$1" in
