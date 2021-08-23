@@ -5,6 +5,10 @@ then
 else
     echo "/etc/default/rcS not found."
 fi
+if [ -r /etc/default/locale ]
+then
+    export $(cat /etc/default/locale | xargs)
+fi
 
 case "$1" in
 		start)

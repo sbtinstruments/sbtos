@@ -18,3 +18,8 @@ alias rm='rm -i'
 alias mv='mv -i'
 alias cp='cp -i'
 
+# Locale
+if [ -r /etc/default/locale ]
+then
+    export $(cat /etc/default/locale | xargs)
+fi

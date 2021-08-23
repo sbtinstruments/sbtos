@@ -1,0 +1,19 @@
+config BR2_PACKAGE_PYTHON_BABEL_SBT
+	bool "python-babel-sbt"
+	select BR2_PACKAGE_PYTHON_PYTZ # runtime
+	help
+	  A collection of tools for internationalizing Python
+	  applications.
+
+	  http://babel.pocoo.org/en/latest/
+
+if BR2_PACKAGE_PYTHON_BABEL_SBT
+
+config BR2_PACKAGE_PYTHON_BABEL_SBT_LOCALE_DATA_PURGE_EXPR
+	string "purge locale data"
+	help
+	  Remove all locale data that matches this expression.
+	  Locale data takes up around 20 MiB of space uncompressed.
+	  Use this config entry to reduce that size.
+
+endif
