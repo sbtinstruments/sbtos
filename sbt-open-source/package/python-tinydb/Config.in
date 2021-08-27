@@ -1,0 +1,7 @@
+config BR2_PACKAGE_PYTHON_TINYDB
+	bool "python-tinydb"
+	select BR2_PACKAGE_PYTHON_TINYDB
+	help
+	  A lightweight document-oriented database written in pure Python.
+
+	  https://github.com/msiemens/tinydb
