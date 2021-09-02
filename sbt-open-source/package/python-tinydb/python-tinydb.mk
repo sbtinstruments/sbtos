@@ -5,7 +5,7 @@
 ################################################################################
 
 PYTHON_TINYDB_VERSION = v4.5.1
-PYTHON_TINYDB_SITE = $(call github,msiemens,tinydb,$(PYTHON_JSONPATCH_VERSION))
+PYTHON_TINYDB_SITE = $(call github,msiemens,tinydb,$(PYTHON_TINYDB_VERSION))
 PYTHON_TINYDB_SETUP_TYPE = setuptools
 PYTHON_TINYDB_LICENSE = MIT
 PYTHON_TINYDB_LICENSE_FILES = LICENSE
