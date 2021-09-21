@@ -1,0 +1,6 @@
+config BR2_PACKAGE_PYTHON_SWU_CLIENT
+	bool "python-swu-client"
+	select BR2_PACKAGE_PYTHON_AIOHTTP # runtime
+	help
+	  Simple client for the SWUpdat HTTP service
+

@@ -1,14 +1,14 @@
-logger "autorun: ACTION=${ACTION} MDEV=${MDEV} DEVTYPE=${DEVTYPE}"
+logger "[autorun] ACTION=${ACTION} MDEV=${MDEV} DEVTYPE=${DEVTYPE}"
 
 mount_dir=/media
 
 if [ -z "${MDEV}" ]; then
-	logger "autorun: MDEV was not set. Exiting..."
+	logger "[autorun] MDEV was not set. Exiting..."
 	exit 1
 fi
 
 if [ "${DEVTYPE}" == "disk" ]; then
-	logger "autorun: Device type is disk. Exiting..."
+	logger "[autorun] Device type is disk. Exiting..."
 	exit 1
 fi
 
@@ -27,32 +27,45 @@ emount() {
 	local max_attempts=10
 
 	while ! mount -t auto -o rw,defaults "/dev/$1" "${mount_dir}/$1" && [[ $attempts -lt $max_attempts ]]; do
-		logger "autorun: Failed to mount $1 (attempt $(expr $attempts + 1)/${max_attempts})"
+		logger "[autorun] Failed to mount $1 (attempt $(expr $attempts + 1)/${max_attempts})"
 		sleep 1
 		attempts=$(expr $attempts + 1)
 	done
 
 	if [[ $attempts -eq $max_attempts ]] ; then
-		logger "autorun: Failed to mount $1"
+		logger "[autorun] Failed to mount $1"
 		rmdir "${mount_dir}/$1"
 		exit 1
 	fi
 
-	logger "autorun: Mounted $1"
+	logger "[autorun] Mounted $1"
 }
 
 autorun() {
 	local autorunpy="${mount_dir}/$1/autorun.py"
 	if [ -x "$autorunpy" ]; then
-		logger "autorun: ${autorunpy}"
+		logger "[autorun]: Executing: ${autorunpy}"
 		python "${autorunpy}" | logger -t "autorun.py"
+		exit 0
 	fi
 }
 
+autoupdate() {
+	for swufile in ${mount_dir}/$1/*.swu; do
+		logger "[autoupdate] Found SWU: $swufile"
+		swu_client send "$swufile" | logger -t "autoupdate"
+		exit 0
+	done
+}
+
 add() {
+	# Exits with code 1 on error
 	eumount $1
 	emount $1
+	# First, try to execute "autorun.py". Exits with code 0 on success
 	autorun $1
+	# Second, try to update the software. Exits with code 0 on success
+	autoupdate $1
 }
 
 case "${ACTION}" in
@@ -63,6 +76,6 @@ case "${ACTION}" in
 		eumount $MDEV
 		;;
 	*)
-		logger "autorun: Unknown action '${ACTION}'"
+		logger "[autorun] Unknown action '${ACTION}'"
 		;;
 esac
