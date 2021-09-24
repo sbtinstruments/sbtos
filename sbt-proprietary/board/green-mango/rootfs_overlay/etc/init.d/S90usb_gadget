@@ -2,67 +2,135 @@
 
 # Reference:
 # [1] creating gadget: https://www.kernel.org/doc/Documentation/usb/gadget_configfs.txt
-# [2] gadget api:  https://www.kernel.org/doc/Documentation/ABI/stable/sysfs-class-udc
-# [3] config options: https://www.kernel.org/doc/Documentation/ABI/testing/configfs-usb-gadget
-
-hn=$(echo hostname)
-manufacturer=`cat /etc/hw-release | grep "MANUFACTURER=" | awk 'BEGIN {FS="="}; {print $2}'`
-pretty_name=`cat /etc/branding | grep "PRETTY_NAME=" | awk 'BEGIN {FS="="}; {print $2}'`
-
-# create partition 'storage.img'
-#TODO: remove the allocation from startup to save boot time
-mkdir -p /var/usb_gadget/
-dd if=/dev/zero of=/var/usb_gadget/storage.img count=10 bs=1M
-# set up loop device
-losetup -o 1048576 -f /var/usb_gadget/storage.img
-
-# format files system - will show up as Bactobox on host
-mkdosfs -n $pretty_name /dev/loop0
-
-# create,mount fs
-mkdir /media/usb_gadget
-mount /dev/loop0 /media/usb_gadget
-# unmount the usb_gadget
-umount /media/usb_gadget
+# [2] gadget api:      https://www.kernel.org/doc/Documentation/ABI/stable/sysfs-class-udc
+# [3] config options:  https://www.kernel.org/doc/Documentation/ABI/testing/configfs-usb-gadget
 
 
-# 1. Creating USB gadget
-mount -t configfs none /sys/kernel/config
-cd /sys/kernel/config/usb_gadget
 
-mkdir mass_storage0
-cd mass_storage0
-# maximum endpoint 0 packet size
-#   echo "64" > bMaxPacketSize0
-# bcd device release number
-#   echo "0x200" > bcdUSB
-# bcd USB specification version number
-#   echo "0x100" > bcdDevice
-# By not setting idVendor and idProduct the value "0x0000" is used implicitly
-# echo "0x0000" > idVendor
-# echo "0x0000" > idProduct
+if [ ! -d /sys/kernel/config/usb_gadget ]; then
+	mount -t configfs none /sys/kernel/config
+fi
 
-# Additional usb gadget configurations
-# Store these config informations in strings subdir
-mkdir strings/0x409 # US English
-# device is identified properly (e.g. lsusb)
+if [ -d /sys/kernel/config/usb_gadget/g1 ]; then
+        exit 0
+fi
 
 
-echo $($hn) > strings/0x409/serialnumber
-echo $manufacturer | cut -d'"' -f 2 > strings/0x409/manufacturer
-echo $pretty_name | cut -d'"' -f 2 > strings/0x409/product
+
+### Configuration
+
+HOSTNAME=$(echo hostname)
+MANUFACTURER=`cat /etc/hw-release | grep "MANUFACTURER=" | awk 'BEGIN {FS="="}; {print $2}'`
+PRETTY_NAME=`cat /etc/branding | grep "PRETTY_NAME=" | awk 'BEGIN {FS="="}; {print $2}'`
+
+STORAGE_INSTANCE="ms0"
+NETWORK_INSTANCE="usb0"
+
+# Vendor is "Linux Foundation"
+ID_VENDOR="0x1d6b"
+# Product is "Multifunction Composite Gadget"
+ID_PRODUCT="0x0104"
+
+SERIAL="$(grep Serial /proc/cpuinfo | sed 's/Serial\s*: 0000\(\w*\)/\1/')"
+MAC="$(echo ${SERIAL} | sed 's/\(\w\w\)/:\1/g' | cut -b 2-)"
+MAC_HOST="12$(echo ${MAC} | cut -b 3-)"
+MAC_DEV="02$(echo ${MAC} | cut -b 3-)"
 
 
-# 2. Creating the configurations see [3]
-mkdir configs/c1.1
-mkdir configs/c1.1/strings/0x409 # US English
-# 3. Creating the functions - attach UDC function
-mkdir functions/mass_storage.ms0
 
-# attach usb gadget to fs
-echo /dev/loop0 > functions/mass_storage.ms0/lun.0/file
-echo 1 > functions/mass_storage.ms0/lun.0/removable
-# 4. Associating the functions with their configurations
-ln -s functions/mass_storage.ms0 configs/c1.1/
-# 5. Enabling the gadget
+### Gadget (overall config)
+
+# Go to the USB-gadget ConfigFS
+cd /sys/kernel/config/usb_gadget/
+
+# Create the gadget
+mkdir g1
+cd g1
+
+# Set overall config options
+echo "0x0200" > bcdUSB
+echo "0xEF" > bDeviceClass
+echo "0x02" > bDeviceSubClass
+echo "0x01" > bDeviceProtocol
+echo "0x3066" > bcdDevice
+echo $ID_VENDOR > idVendor
+echo $ID_PRODUCT > idProduct
+
+# Strings that identify this gadget device
+mkdir strings/0x409
+echo "9112473" > strings/0x409/serialnumber
+echo $MANUFACTURER > strings/0x409/manufacturer
+echo $PRETTY_NAME > strings/0x409/product
+
+
+
+### Functions
+
+# RNDIS network (for the Windows-compatible config)
+mkdir functions/rndis.$NETWORK_INSTANCE
+echo $MAC_HOST > functions/rndis.$NETWORK_INSTANCE/host_addr
+echo $MAC_DEV > functions/rndis.$NETWORK_INSTANCE/dev_addr
+# Tell Windows to use the RNDIS 6.0 driver
+echo "RNDIS" > functions/rndis.$NETWORK_INSTANCE/os_desc/interface.rndis/compatible_id
+echo "5162001" > functions/rndis.$NETWORK_INSTANCE/os_desc/interface.rndis/sub_compatible_id
+
+# Mass storage (for both configs)
+mkdir functions/mass_storage.$STORAGE_INSTANCE
+echo 0 > functions/mass_storage.$STORAGE_INSTANCE/stall
+echo 0 > functions/mass_storage.$STORAGE_INSTANCE/lun.0/cdrom
+echo 0 > functions/mass_storage.$STORAGE_INSTANCE/lun.0/nofua
+echo 1 > functions/mass_storage.$STORAGE_INSTANCE/lun.0/removable
+echo 1 > functions/mass_storage.$STORAGE_INSTANCE/lun.0/ro
+echo $PRETTY_NAME > functions/mass_storage.$STORAGE_INSTANCE/lun.0/inquiry_string
+
+## CDC/ECM network (for general-purpose use)
+# Disabled for now!
+# Instead, we use RNDIS everywhere (note that it doesn't work on macOS)
+#mkdir functions/ecm.$NETWORK_INSTANCE
+#echo $MAC_HOST > functions/ecm.$NETWORK_INSTANCE/host_addr
+#echo $MAC_DEV > functions/ecm.$NETWORK_INSTANCE/dev_addr
+
+
+
+### Config 1 (for Windows-compatibility)
+
+# Create config
+mkdir configs/c.1
+mkdir configs/c.1/strings/0x409
+echo "RNDIS" > configs/c.1/strings/0x409/configuration
+
+# Help Windows choose this config
+echo "1" > os_desc/use
+echo "0xcd" > os_desc/b_vendor_code
+echo "MSFT100" > os_desc/qw_sign
+ln -s configs/c.1 os_desc
+
+# Connect config with its functions
+ln -s functions/rndis.$NETWORK_INSTANCE configs/c.1
+ln -s functions/mass_storage.$STORAGE_INSTANCE configs/c.1
+
+
+
+### Config 2 (for everything non-Windows)
+# Disabled for now!
+# Windows really doesn't like devices with multiple configurations.
+# Instead, we use config 1 everywhere.
+#
+## Create config
+#mkdir configs/c.2
+#mkdir configs/c.2/strings/0x409
+#echo "CDC" > configs/c.2/strings/0x409/configuration
+#
+## Connect config with its functions
+##ln -s functions/ecm.$NETWORK_INSTANCE configs/c.2
+## Note that we use RNDIS even on non-Windows platforms. This doesn't work for macOS.
+## TODO: Use CDC/ECM on non-Windows
+#ln -s functions/rndis.$NETWORK_INSTANCE configs/c.2
+#ln -s functions/mass_storage.$STORAGE_INSTANCE configs/c.2
+
+
+
+### Associate gadget with USB device controller (UDC)
+
+# The UDC name is hardware-specific.
 echo "ci_hdrc.0" > UDC

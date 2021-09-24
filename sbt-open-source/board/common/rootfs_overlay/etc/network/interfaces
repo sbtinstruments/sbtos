@@ -7,3 +7,12 @@ auto eth0
 iface eth0 inet dhcp
 	udhcpc_opts -t7 -T3
 	hostname $(hostname)
+
+auto usb0
+iface usb0 inet static
+	# If something goes wrong during ifdown, the static IP lingers.
+	# We flush the IP pre-up to avoid conflicts.
+	pre-up ip addr flush $IFACE
+	address 10.20.30.40
+	netmask 255.255.255.0
+
