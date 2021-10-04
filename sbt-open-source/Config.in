@@ -27,3 +27,6 @@ source "$BR2_EXTERNAL_SBT_OPEN_SOURCE_PATH/package/python-utmp/Config.in"
 source "$BR2_EXTERNAL_SBT_OPEN_SOURCE_PATH/package/telegraf/Config.in"
 source "$BR2_EXTERNAL_SBT_OPEN_SOURCE_PATH/package/uchardet/Config.in"
 source "$BR2_EXTERNAL_SBT_OPEN_SOURCE_PATH/package/python-tinydb/Config.in"
+source "$BR2_EXTERNAL_SBT_OPEN_SOURCE_PATH/package/python-sniffio/Config.in"
+source "$BR2_EXTERNAL_SBT_OPEN_SOURCE_PATH/package/python-anyio/Config.in"
+
