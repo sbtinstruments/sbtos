@@ -126,6 +126,14 @@ echo -e "firmware $firmware_version\nsoftware $software_version" \
 	> /media/rootfs/etc/sw-versions
 
 ################################################################################
+# Change /var/www/lab owner
+################################################################################
+# Fix owner of /var/www/lab. Nginx expects the www-data user to own it.
+# Ideally, said owner should be built into the rootfs image but
+# buildroot won't allow it.
+chown -R www-data:www-data /var/www/lab
+
+################################################################################
 # Startup scripts
 ################################################################################
 echo "rcS: [INFO] Running all startup scripts"
