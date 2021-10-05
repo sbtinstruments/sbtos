@@ -9,6 +9,7 @@ PYTHON_ANYIO_SITE = $(call github,agronholm,anyio,$(PYTHON_ANYIO_VERSION))
 PYTHON_ANYIO_SETUP_TYPE = setuptools
 PYTHON_ANYIO_LICENSE = MIT
 PYTHON_ANYIO_LICENSE_FILES = LICENSE
+PYTHON_ANYIO_DEPENDENCIES = host-python-setuptools-scm
 
 $(eval $(python-package))
 
