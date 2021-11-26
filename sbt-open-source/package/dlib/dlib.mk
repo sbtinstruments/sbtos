@@ -5,7 +5,8 @@
 ################################################################################
 
 DLIB_VERSION = v19.21
-DLIB_SITE = https://github.com/davisking/dlib/archive/refs/tags/${DLIB_VERSION}.tar.gz
+DLIB_SOURCE = ${DLIB_VERSION}.tar.gz
+DLIB_SITE = https://github.com/davisking/dlib/archive/refs/tags
 DLIB_INSTALL_STAGING = YES
 DLIB_LICENSE = BSL-1.0
 DLIB_LICENSE_FILES = dlib/LICENSE.txt
