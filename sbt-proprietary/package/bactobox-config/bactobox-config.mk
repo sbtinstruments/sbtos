@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-BACTOBOX_CONFIG_VERSION = bactobox-v5.11.0
+BACTOBOX_CONFIG_VERSION = bactobox-v5.11.2
 BACTOBOX_CONFIG_SITE = git@github.com:sbtinstruments/green-mango-config.git
 BACTOBOX_CONFIG_SITE_METHOD = git
 BACTOBOX_CONFIG_LICENSE = PROPRIETARY
