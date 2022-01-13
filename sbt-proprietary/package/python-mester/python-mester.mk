@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PYTHON_MESTER_VERSION = refs/tags/v8.0.0
+PYTHON_MESTER_VERSION = refs/tags/v8.0.1
 PYTHON_MESTER_SITE = git@github.com:sbtinstruments/mester.git
 PYTHON_MESTER_SITE_METHOD = git
 PYTHON_MESTER_SETUP_TYPE = setuptools
